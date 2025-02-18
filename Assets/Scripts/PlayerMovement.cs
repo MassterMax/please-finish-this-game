@@ -7,12 +7,12 @@ public class PlayerMovement : MonoBehaviour
 {
     [SerializeField] float moveSpeed = 5f;
     [SerializeField] float jumpForce = 10f;
-    // [SerializeField] float coyoteTime = 0.2f;
+    [SerializeField] float coyoteTime = 0.1f;
     [SerializeField] LayerMask groundLayer;
 
     private Rigidbody2D rb;
 
-    // private float coyoteTimeTimer = 0f;
+    private float coyoteTimer = 0f;
     BoxCollider2D boxCollider;
     [SerializeField] float groundedCastDistance = 0.05f;
     [SerializeField] BoxCollider2D tmpBoxCollider2D;  // todo - remove
@@ -24,27 +24,32 @@ public class PlayerMovement : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         boxCollider = GetComponent<BoxCollider2D>();
+        HandleGravityScale();
     }
 
     void Update()
     {
         Move();
 
-        bool isGrounded = IsGrounded();
-        // if (isGrounded())
-        // {
-        //     // reset
-        //     coyoteTimeTimer = coyoteTime;
-        //     jumpUsed = false;
-        // }
-        // else
-        // {
-        //     coyoteTimeTimer -= Time.deltaTime;
-        // }
-
-        if (Input.GetButtonDown("Jump") && isGrounded)
+        if (IsGrounded() && rb.velocity.y <= 0.01f)
         {
-            Jump();
+            coyoteTimer = coyoteTime;
+        }
+        else
+        {
+            coyoteTimer -= Time.deltaTime;
+        }
+
+        // jump logic
+        if (Input.GetButtonDown("Jump") && coyoteTimer > 0)
+        {
+            rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+        }
+
+        // short jump for early space release
+        if (Input.GetButtonUp("Jump") && rb.velocity.y > 0)
+        {
+            rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y / 2);
         }
 
         HandleGravityScale();
@@ -57,17 +62,12 @@ public class PlayerMovement : MonoBehaviour
         rb.velocity = new Vector2(moveInput * moveSpeed, rb.velocity.y);
     }
 
-    void Jump()
+    void HandleGravityScale()
     {
-        rb.velocity = new Vector2(rb.velocity.x, jumpForce);
-        // coyoteTimeTimer = 0f;
-    }
-
-    void HandleGravityScale() {
         // for fast falling
         if (rb.velocity.y < 0)
         {
-            rb.gravityScale = objectGravityScale * 2f;
+            rb.gravityScale = objectGravityScale * 1.5f;
         }
         else
         {

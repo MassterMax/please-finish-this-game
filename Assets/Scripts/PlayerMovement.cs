@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Data.Common;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
@@ -57,6 +54,11 @@ public class PlayerMovement : MonoBehaviour
         if (Input.GetButtonUp("Jump") && rb.velocity.y > 0)
         {
             rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y / 2);
+        }
+
+        // make vertical velocity 0 for small values
+        if (!Input.GetButtonDown("Jump") && Mathf.Abs(rb.velocity.y) < 0.001f) {
+            rb.velocity = new Vector2(rb.velocity.x, 0);
         }
 
         HandleGravityScale();

@@ -134,8 +134,8 @@ public class PlayerMovement : MonoBehaviour
         return raycastHit.collider != null;
     }
 
-    // private void OnDrawGizmos()
-    // {
-    //     Gizmos.DrawWireCube(tmpBoxCollider2D.bounds.center + Vector3.down * groundedCastDistance, tmpBoxCollider2D.bounds.size);
-    // }
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawWireCube(tmpBoxCollider2D.bounds.center + Vector3.down * groundedCastDistance, tmpBoxCollider2D.bounds.size);
+    }
 }

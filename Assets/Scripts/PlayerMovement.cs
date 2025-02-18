@@ -57,7 +57,8 @@ public class PlayerMovement : MonoBehaviour
         }
 
         // make vertical velocity 0 for small values
-        if (!Input.GetButtonDown("Jump") && Mathf.Abs(rb.velocity.y) < 0.001f) {
+        if (!Input.GetButtonDown("Jump") && Mathf.Abs(rb.velocity.y) < 0.001f)
+        {
             rb.velocity = new Vector2(rb.velocity.x, 0);
         }
 
@@ -68,11 +69,30 @@ public class PlayerMovement : MonoBehaviour
 
     void Move()
     {
-        float moveInput = Input.GetAxis("Horizontal");
-        rb.velocity = new Vector2(moveInput * moveSpeed, rb.velocity.y);
+        Vector2 direction = Vector2.zero;
 
-        // set anim
-        animator.SetBool("is_moving", Mathf.Abs(moveInput) > IDLE_DELTA);
+        if (Input.GetKey(KeyCode.A)) {
+            direction += Vector2.left;
+        }
+
+        if (Input.GetKey(KeyCode.D)) {
+            direction += Vector2.right;
+        }
+
+        rb.velocity = new Vector2(direction.x * moveSpeed, rb.velocity.y);
+        animator.SetBool("is_moving", direction.x != 0);
+
+        // if (Mathf.Abs(moveInput) > IDLE_DELTA)
+        // {
+        //     rb.velocity = new Vector2(Mathf.Sign(moveInput) * moveSpeed, rb.velocity.y);
+        // }
+        // else
+        // {
+        //     rb.velocity = new Vector2(0, rb.velocity.y);
+        // }
+
+        // // set anim
+        // animator.SetBool("is_moving", Mathf.Abs(moveInput) > IDLE_DELTA);
     }
 
     void Rotate()

@@ -184,7 +184,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 5
+  orthographic size: 10
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -906,15 +906,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 481f0f6be6bbbaa48a953cb1a1d49ee4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 5
-  jumpForce: 10
+  moveSpeed: 10
+  jumpForce: 20
   coyoteTime: 0.1
   groundLayer:
     serializedVersion: 2
     m_Bits: 64
   groundedCastDistance: 0.1
   tmpBoxCollider2D: {fileID: 1487734471}
-  objectGravityScale: 3
+  objectGravityScale: 8
+  gravityScaleFactor: 1.5
 --- !u!1 &1639550594
 GameObject:
   m_ObjectHideFlags: 0

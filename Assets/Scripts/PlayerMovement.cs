@@ -19,6 +19,7 @@ public class PlayerMovement : MonoBehaviour
     // public static float globalGravity = -9.81f;
 
     [SerializeField] float objectGravityScale = 1f;
+    [SerializeField] float gravityScaleFactor = 1f;
 
     void Start()
     {
@@ -67,7 +68,7 @@ public class PlayerMovement : MonoBehaviour
         // for fast falling
         if (rb.velocity.y < 0)
         {
-            rb.gravityScale = objectGravityScale * 1.5f;
+            rb.gravityScale = objectGravityScale * gravityScaleFactor;
         }
         else
         {

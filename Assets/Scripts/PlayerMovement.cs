@@ -5,8 +5,8 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    [SerializeField] float moveSpeed = 5f;
-    [SerializeField] float jumpForce = 10f;
+    [SerializeField] float moveSpeed = 10f;
+    [SerializeField] float jumpForce = 20f;
     [SerializeField] float coyoteTime = 0.1f;
     [SerializeField] LayerMask groundLayer;
 
@@ -16,15 +16,21 @@ public class PlayerMovement : MonoBehaviour
     BoxCollider2D boxCollider;
     [SerializeField] float groundedCastDistance = 0.05f;
     [SerializeField] BoxCollider2D tmpBoxCollider2D;  // todo - remove
-    // public static float globalGravity = -9.81f;
 
-    [SerializeField] float objectGravityScale = 1f;
-    [SerializeField] float gravityScaleFactor = 1f;
+    [SerializeField] float objectGravityScale = 8f;
+    [SerializeField] float gravityScaleFactor = 1.5f;
+
+    // Animation
+    Animator animator;
+    SpriteRenderer spriteRenderer;
+    private static float IDLE_DELTA = 0.01f;
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         boxCollider = GetComponent<BoxCollider2D>();
+        animator = GetComponent<Animator>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
         HandleGravityScale();
     }
 
@@ -54,6 +60,7 @@ public class PlayerMovement : MonoBehaviour
         }
 
         HandleGravityScale();
+        Rotate();
     }
 
 
@@ -61,6 +68,22 @@ public class PlayerMovement : MonoBehaviour
     {
         float moveInput = Input.GetAxis("Horizontal");
         rb.velocity = new Vector2(moveInput * moveSpeed, rb.velocity.y);
+
+        // set anim
+        animator.SetBool("is_moving", Mathf.Abs(moveInput) > IDLE_DELTA);
+    }
+
+    void Rotate()
+    {
+        float moveInput = Input.GetAxis("Horizontal");
+        if (moveInput == 0 || Time.timeScale == 0)
+        {
+            return;
+        }
+        if (spriteRenderer.flipX != Mathf.Sign(moveInput) < 0)
+        {
+            spriteRenderer.flipX = !spriteRenderer.flipX;
+        }
     }
 
     void HandleGravityScale()
@@ -89,8 +112,8 @@ public class PlayerMovement : MonoBehaviour
         return raycastHit.collider != null;
     }
 
-    private void OnDrawGizmos()
-    {
-        Gizmos.DrawWireCube(tmpBoxCollider2D.bounds.center + Vector3.down * groundedCastDistance, tmpBoxCollider2D.bounds.size);
-    }
+    // private void OnDrawGizmos()
+    // {
+    //     Gizmos.DrawWireCube(tmpBoxCollider2D.bounds.center + Vector3.down * groundedCastDistance, tmpBoxCollider2D.bounds.size);
+    // }
 }

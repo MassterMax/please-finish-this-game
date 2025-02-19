@@ -15,6 +15,7 @@ public class LevelController : MonoBehaviour
 
     // level restart options
     bool started = false;
+    bool finished = false;
     float levelTimer = 0f;
     float bestTimer = float.MaxValue;
     private static string TIME_FORMAT = "mm'`'ss'``'ff";
@@ -34,6 +35,10 @@ public class LevelController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (finished)
+        {
+            return;
+        }
         if (!started && (Input.GetButtonDown("Jump") || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D)))
         {
             started = true;
@@ -70,25 +75,24 @@ public class LevelController : MonoBehaviour
     {
         Debug.Log("OnFinishEnter");
         SetBestTime();
-        started = false;
-        ResetLevelTimer();
         StartCoroutine(DelayAndResetPlayer());
     }
 
     public void OnTrueDeath()
     {
         Debug.Log("OnTrueDeath");
-        started = false;
-        ResetLevelTimer();
-
         // todo animation of death
         StartCoroutine(DelayAndResetPlayer());
     }
 
     private IEnumerator DelayAndResetPlayer()
     {
+        started = false;
+        ResetLevelTimer();
+        finished = true;
         player.StopPlayer();
         yield return new WaitForSeconds(2f);
         player.ResetPlayer(levelStart.transform.position);
+        finished = false;
     }
 }

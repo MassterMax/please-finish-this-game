@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
+    [SerializeField] ParticleSystem damageParticles;
     [SerializeField] float moveSpeed = 10f;
     [SerializeField] float jumpForce = 20f;
     [SerializeField] float coyoteTime = 0.1f;
@@ -35,13 +36,25 @@ public class PlayerMovement : MonoBehaviour
     {
         transform.position = position;
         canMove = true;
+        gameObject.SetActive(true);
     }
 
-    public void StopPlayer()
+    public void StopPlayer(bool active)
     {
-        rb.velocity = new Vector2(0, rb.velocity.y);
+        if (!active)
+        {
+            // dead
+            SpawnDamageParticles();
+        }
+        rb.velocity = new Vector2(0, 0);
         canMove = false;
         animator.SetBool("is_moving", false);
+        gameObject.SetActive(active);
+    }
+
+    private void SpawnDamageParticles()
+    {
+        Instantiate(damageParticles, transform.position, Quaternion.identity);
     }
 
     void Update()

@@ -75,22 +75,22 @@ public class LevelController : MonoBehaviour
     {
         Debug.Log("OnFinishEnter");
         SetBestTime();
-        StartCoroutine(DelayAndResetPlayer());
+        StartCoroutine(DelayAndResetPlayer(true));
     }
 
     public void OnTrueDeath()
     {
         Debug.Log("OnTrueDeath");
         // todo animation of death
-        StartCoroutine(DelayAndResetPlayer());
+        StartCoroutine(DelayAndResetPlayer(false));
     }
 
-    private IEnumerator DelayAndResetPlayer()
+    private IEnumerator DelayAndResetPlayer(bool alive)
     {
         started = false;
         ResetLevelTimer();
         finished = true;
-        player.StopPlayer();
+        player.StopPlayer(alive);
         yield return new WaitForSeconds(2f);
         player.ResetPlayer(levelStart.transform.position);
         finished = false;

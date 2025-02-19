@@ -20,7 +20,6 @@ public class PlayerMovement : MonoBehaviour
     // Animation
     Animator animator;
     SpriteRenderer spriteRenderer;
-    private static float IDLE_DELTA = 0.01f;
 
     void Start()
     {

@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Spikes : BaseTriggerHandler
+public class DeathTrigger : BaseTriggerHandler
 {
-    [SerializeField] GameDialogue spikesDialogue;
+    [SerializeField] GameDialogue deathDialogue;
     DialogueController dialogueController;
     LevelController levelController;
 
@@ -34,6 +34,6 @@ public class Spikes : BaseTriggerHandler
         }
 
         // start conversation
-        dialogueController.EnqueueParagraph(spikesDialogue);
+        dialogueController.EnqueueParagraph(deathDialogue);
     }
 }

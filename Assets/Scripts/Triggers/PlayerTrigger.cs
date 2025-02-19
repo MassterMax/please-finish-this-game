@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class HandledTrigger : MonoBehaviour
+public class PlayerTrigger : MonoBehaviour
 {
     [SerializeField] BaseTriggerHandler handler;
 

@@ -18,7 +18,7 @@ public class LevelController : MonoBehaviour
     bool finished = false;
     float levelTimer = 0f;
     float bestTimer = float.MaxValue;
-    private static string TIME_FORMAT = "mm'`'ss'``'ff";
+    private static string TIME_FORMAT = "mm':'ss':'ff";
 
     void Awake()
     {
@@ -28,7 +28,7 @@ public class LevelController : MonoBehaviour
         // init
         TimeSpan currentTime = System.TimeSpan.FromSeconds(0);
         levelTimerText.text = currentTime.ToString(TIME_FORMAT);
-        bestTimerText.text = "best time: ???";
+        bestTimerText.text = "best time: ?";
         player.ResetPlayer(levelStart.transform.position);
     }
 

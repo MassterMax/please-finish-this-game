@@ -18,7 +18,8 @@ public class LevelController : MonoBehaviour
     float levelTimer = 0f;
     float bestTimer = float.MaxValue;
     private static string TIME_FORMAT = "mm'`'ss'``'ff";
-    void Start()
+
+    void Awake()
     {
         player = FindObjectOfType<PlayerMovement>();
         levelStart = FindObjectOfType<LevelStart>();
@@ -27,6 +28,7 @@ public class LevelController : MonoBehaviour
         TimeSpan currentTime = System.TimeSpan.FromSeconds(0);
         levelTimerText.text = currentTime.ToString(TIME_FORMAT);
         bestTimerText.text = "best time: ???";
+        player.ResetPlayer(levelStart.transform.position);
     }
 
     // Update is called once per frame
@@ -67,21 +69,26 @@ public class LevelController : MonoBehaviour
     public void OnFinishEnter()
     {
         Debug.Log("OnFinishEnter");
-
-        started = false;
         SetBestTime();
+        started = false;
+        ResetLevelTimer();
+        StartCoroutine(DelayAndResetPlayer());
+    }
+
+    public void OnTrueDeath()
+    {
+        Debug.Log("OnTrueDeath");
+        started = false;
         ResetLevelTimer();
 
-        if (levelStart == null)
-        {
-            Debug.LogError("Can't find levelStart!");
-            return;
-        }
-        player.transform.position = levelStart.transform.position;
+        // todo animation of death
+        StartCoroutine(DelayAndResetPlayer());
+    }
 
-        // TODO:
-        // pause the game
-        // dialog with level restart
-        // after delay on any input - restart level
+    private IEnumerator DelayAndResetPlayer()
+    {
+        player.StopPlayer();
+        yield return new WaitForSeconds(2f);
+        player.ResetPlayer(levelStart.transform.position);
     }
 }

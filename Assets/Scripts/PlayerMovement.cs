@@ -21,17 +21,36 @@ public class PlayerMovement : MonoBehaviour
     Animator animator;
     SpriteRenderer spriteRenderer;
 
-    void Start()
+    bool canMove;
+
+    void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         boxCollider = GetComponent<BoxCollider2D>();
         animator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
-        HandleGravityScale();
+    }
+
+    public void ResetPlayer(Vector2 position)
+    {
+        transform.position = position;
+        canMove = true;
+    }
+
+    public void StopPlayer()
+    {
+        rb.velocity = new Vector2(0, rb.velocity.y);
+        canMove = false;
+        animator.SetBool("is_moving", false);
     }
 
     void Update()
     {
+        if (!canMove)
+        {
+            return;
+        }
+
         Move();
 
         if (IsGrounded() && rb.velocity.y <= 0.01f)
@@ -70,11 +89,13 @@ public class PlayerMovement : MonoBehaviour
     {
         Vector2 direction = Vector2.zero;
 
-        if (Input.GetKey(KeyCode.A)) {
+        if (Input.GetKey(KeyCode.A))
+        {
             direction += Vector2.left;
         }
 
-        if (Input.GetKey(KeyCode.D)) {
+        if (Input.GetKey(KeyCode.D))
+        {
             direction += Vector2.right;
         }
 

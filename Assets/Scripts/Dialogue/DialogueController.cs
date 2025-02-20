@@ -8,7 +8,7 @@ public class DialogueController : MonoBehaviour
 {
     [SerializeField] TextMeshProUGUI dialogue;
     [SerializeField] float typingSpeed = 5f;
-    [SerializeField] float timeBetweenParagraphs = 3f;
+    [SerializeField] float timeBetweenParagraphs = 1.5f;
 
     string p;
 
@@ -18,8 +18,9 @@ public class DialogueController : MonoBehaviour
 
     private const string HTML_ALPHA = "<color=#00000000>";
     private const float MAX_TYPE_TIME = 0.1f;
+    private const float CHAR_FOR_MINUTE = 2500;  // 750
 
-    void Start() {
+    void Awake() {
         gameObject.SetActive(false);
     }
 
@@ -46,6 +47,7 @@ public class DialogueController : MonoBehaviour
             gameObject.SetActive(true);
         }
 
+        Debug.Log("will StartCoroutine - TypeParagraph");
         paragraphCoroutine = StartCoroutine(TypeParagraph(gameDialogue));
     }
 
@@ -59,6 +61,9 @@ public class DialogueController : MonoBehaviour
             dialogue.text = "";
             string originalText = p;
             int aplhaIndex = 0;
+            float additionalTime = 60.0f * p.Length / CHAR_FOR_MINUTE;
+            Debug.Log("additionalTime: " + additionalTime.ToString());
+
             foreach (char c in p.ToCharArray()) {
                 aplhaIndex++;
                 dialogue.text = originalText;
@@ -68,7 +73,7 @@ public class DialogueController : MonoBehaviour
                 yield return new WaitForSeconds(MAX_TYPE_TIME / typingSpeed);
             }
             // sleep
-            yield return new WaitForSeconds(timeBetweenParagraphs);
+            yield return new WaitForSeconds(timeBetweenParagraphs + additionalTime);
         }
 
         gameObject.SetActive(false);

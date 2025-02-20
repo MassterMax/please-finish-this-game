@@ -5630,6 +5630,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   levelState: {fileID: 11400000, guid: 0ee9b92da63249f4bbfe0a4047e47add, type: 2}
+  levelStartDialogue: {fileID: 11400000, guid: 12ac513331337824f9a3b150d5f00650, type: 2}
+  blockMoveTime: 25
 --- !u!1 &346571127
 GameObject:
   m_ObjectHideFlags: 0

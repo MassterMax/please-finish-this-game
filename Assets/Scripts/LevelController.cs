@@ -8,7 +8,7 @@ public class LevelController : MonoBehaviour
 {
     LevelStart levelStart;
     PlayerMovement player;
-
+    DialogueController dialogueController;
     // UI
     [SerializeField] TextMeshProUGUI levelTimerText;
     [SerializeField] TextMeshProUGUI bestTimerText;
@@ -29,12 +29,11 @@ public class LevelController : MonoBehaviour
     {
         player = FindObjectOfType<PlayerMovement>();
         levelStart = FindObjectOfType<LevelStart>();
-
-        // init
-        TimeSpan currentTime = System.TimeSpan.FromSeconds(0);
-        levelTimerText.text = currentTime.ToString(TIME_FORMAT);
-        bestTimerText.text = "best time: ?";
-        player.ResetPlayer(levelStart.transform.position);
+        dialogueController = FindObjectOfType<DialogueController>();
+        if (dialogueController == null)
+        {
+            Debug.LogError("Can't find dialogueController!");
+        }
 
         if (Instance == null)
         {
@@ -128,11 +127,33 @@ public class LevelController : MonoBehaviour
         finished = false;
     }
 
-
-    public void LoadLevel(LevelState levelState)
+    private IEnumerator BlockPlayerMoveOnStart(float time)
     {
+        Debug.Log("BlockPlayerMoveOnStart");
+        finished = true;
+        player.ResetPlayer(levelStart.transform.position);
+        player.StopPlayer(true);
+        yield return new WaitForSeconds(time);
+        player.ResetPlayer(levelStart.transform.position);
+        finished = false;
+    }
+
+
+    public void LoadLevel(LevelState levelState, GameDialogue gameDialogue, float blockMoveTime)
+    {
+        // init
+        Debug.Log("LoadLevel");
+        TimeSpan currentTime = System.TimeSpan.FromSeconds(0);
+        levelTimerText.text = currentTime.ToString(TIME_FORMAT);
+        bestTimerText.text = "best time: ?";
+
+        StartCoroutine(BlockPlayerMoveOnStart(blockMoveTime));
+
+        Debug.Log("Call - LoadLevel - EnqueueParagraph");
+        dialogueController.EnqueueParagraph(gameDialogue);
+
         currentLevelState = levelState;
-        currentDeathIndex = 0;
+        currentDeathIndex = 0;  // first phase should always reset all active objects
         ApplyCurrentPhase();
     }
 

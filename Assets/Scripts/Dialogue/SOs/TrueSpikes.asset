@@ -16,4 +16,6 @@ MonoBehaviour:
   - WOW!
   - You shouldn't bump into spikes, you know?
   - Be careful next time
+  emotions: 000000000400000000000000
   force: 1
+  randomParagraph: 0

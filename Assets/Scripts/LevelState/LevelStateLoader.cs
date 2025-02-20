@@ -5,9 +5,12 @@ public class LevelStateLoader : MonoBehaviour
     [SerializeField] LevelState levelState;
     [SerializeField] GameDialogue levelStartDialogue;
     [SerializeField] float blockMoveTime;
+    
+    [SerializeField] GameDialogue nextSceneDialogue;
+    [SerializeField] string nextSceneName;
 
     private void Start()
     {
-        LevelController.Instance.LoadLevel(levelState, levelStartDialogue, blockMoveTime);
+        LevelController.Instance.LoadLevel(levelState, levelStartDialogue, blockMoveTime, nextSceneName, nextSceneDialogue);
     }
 }

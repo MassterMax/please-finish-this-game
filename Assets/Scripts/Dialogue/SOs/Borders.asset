@@ -15,4 +15,6 @@ MonoBehaviour:
   paragraphs:
   - Where are you going?
   - It's not safe, you better go to the finish line!
+  emotions: 0400000000000000
   force: 1
+  randomParagraph: 0

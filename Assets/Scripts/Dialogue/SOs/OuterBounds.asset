@@ -15,4 +15,6 @@ MonoBehaviour:
   paragraphs:
   - How did you do that!?!?
   - I'm starting to think you're not a pro...
+  emotions: 0400000000000000
   force: 1
+  randomParagraph: 0

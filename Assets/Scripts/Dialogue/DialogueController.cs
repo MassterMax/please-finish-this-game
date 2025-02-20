@@ -2,10 +2,13 @@ using System;
 using System.Collections;
 using TMPro;
 using UnityEngine;
-
+using UnityEngine.UI;
+using System.Collections.Generic;
+using System.Linq;
 public class DialogueController : MonoBehaviour
 {
     [SerializeField] TextMeshProUGUI dialogue;
+    [SerializeField] Image emotionImage;
     [SerializeField] float typingSpeed = 5f;
     [SerializeField] float timeBetweenParagraphs = 1.5f;
 
@@ -19,23 +22,39 @@ public class DialogueController : MonoBehaviour
     private const float MAX_TYPE_TIME = 0.1f;
     private const float CHAR_FOR_MINUTE = 2500;  // 750
 
-    void Awake() {
+    // for emotions - saved resource
+    [SerializeField] List<Sprite> emotionSprites;
+    Dictionary<Emotions, Sprite> emotionToSprite = new Dictionary<Emotions, Sprite>();
+
+    void Awake()
+    {
+
+        var myEnumMemberCount = Enum.GetNames(typeof(Emotions)).Length;
+        if (myEnumMemberCount != emotionSprites.Count)
+        {
+            Debug.LogError("myEnumMemberCount != emotionSprites.Count, " + myEnumMemberCount.ToString() + " != " + emotionSprites.Count.ToString());
+        }
+        string[] emotionsArr = Enum.GetNames(typeof(Emotions));
+        for (int i = 0; i < emotionSprites.Count; ++i)
+        {
+            Enum.TryParse(emotionsArr[i], out Emotions emot);
+            emotionToSprite[emot] = emotionSprites[i];
+        }
+
         gameObject.SetActive(false);
     }
 
-    void Update()
+    public void EnqueueParagraph(GameDialogue gameDialogue)
     {
-        
-    }
-
-    public void EnqueueParagraph(GameDialogue gameDialogue) {
-        if (isTyping && !gameDialogue.force) {
+        if (isTyping && !gameDialogue.force)
+        {
             // gentle ignore
             Debug.Log("Gentle ignore gameDialogue: " + gameDialogue.ToString());
             return;
         }
 
-        if (isTyping && gameDialogue.force) {
+        if (isTyping && gameDialogue.force)
+        {
             dialogue.text = "";
             StopCoroutine(paragraphCoroutine);
         }
@@ -50,16 +69,36 @@ public class DialogueController : MonoBehaviour
         paragraphCoroutine = StartCoroutine(TypeParagraph(gameDialogue));
     }
 
-    private IEnumerator TypeParagraph(GameDialogue gameDialogue) {
+    private IEnumerator TypeParagraph(GameDialogue gameDialogue)
+    {
+        Debug.Log("inside TypeParagraph");
         isTyping = true;
         string[] paragraphsToPrint = gameDialogue.paragraphs;
-        if (gameDialogue.randomParagraph) {
-            paragraphsToPrint = new string[]{gameDialogue.paragraphs[UnityEngine.Random.Range(0, gameDialogue.paragraphs.Length)]};
+        if (gameDialogue.randomParagraph)
+        {
+            paragraphsToPrint = new string[] { gameDialogue.paragraphs[UnityEngine.Random.Range(0, gameDialogue.paragraphs.Length)] };
         }
-        foreach (string p in paragraphsToPrint) {
-            if (!isTyping) {
+
+        if (gameDialogue.emotions.Length != gameDialogue.paragraphs.Length)
+        {
+            Debug.LogError("gameDialogue.emotions.Length != gameDialogue.paragraphs.Length, " + gameDialogue.emotions.Length.ToString() + " != " + gameDialogue.paragraphs.Length.ToString());
+        }
+
+        int emotIdx = 0;
+        foreach (string p in paragraphsToPrint)
+        {
+            Debug.Log("inside TypeParagraph, emotIdx=" + emotIdx.ToString());
+            if (!isTyping)
+            {
                 break;
             }
+            // image logic
+            Emotions currentEmotion = Emotions.Neutral;
+            if (emotIdx < gameDialogue.emotions.Length)
+            {
+                currentEmotion = gameDialogue.emotions[emotIdx];
+            }
+            emotionImage.sprite = emotionToSprite[currentEmotion];
             // print logic
             dialogue.text = "";
             string originalText = p;
@@ -67,7 +106,8 @@ public class DialogueController : MonoBehaviour
             float additionalTime = 60.0f * p.Length / CHAR_FOR_MINUTE;
             Debug.Log("additionalTime: " + additionalTime.ToString());
 
-            foreach (char c in p.ToCharArray()) {
+            foreach (char c in p.ToCharArray())
+            {
                 aplhaIndex++;
                 dialogue.text = originalText;
                 string displayedText = dialogue.text.Insert(aplhaIndex, HTML_ALPHA);
@@ -77,6 +117,7 @@ public class DialogueController : MonoBehaviour
             }
             // sleep
             yield return new WaitForSeconds(timeBetweenParagraphs + additionalTime);
+            emotIdx += 1;
         }
 
         gameObject.SetActive(false);

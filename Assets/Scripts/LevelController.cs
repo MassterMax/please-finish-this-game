@@ -1,15 +1,17 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+
 using TMPro;
 using UnityEngine;
-
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 public class LevelController : MonoBehaviour
 {
     LevelStart levelStart;
     PlayerMovement player;
     DialogueController dialogueController;
-    // UI
+    // UI, TODO - move to other place or make singleton
     [SerializeField] TextMeshProUGUI levelTimerText;
     [SerializeField] TextMeshProUGUI bestTimerText;
 
@@ -24,6 +26,10 @@ public class LevelController : MonoBehaviour
     private LevelState currentLevelState;
     private int currentDeathIndex = 0;
     public static LevelController Instance { get; private set; }
+
+    // for the mext scene
+    private string nextSceneName;
+    private GameDialogue nextSceneDialogue;
 
     void Awake()
     {
@@ -105,15 +111,33 @@ public class LevelController : MonoBehaviour
         // todo animation of death
         StartCoroutine(DelayAndResetPlayer(false));
 
-        // if that was last state
-        // if (currentLevelState == null || currentDeathIndex >= currentLevelState.levelPhases.Count)
-        // {
-        //     LoadNextLevel();
-        //     return;
-        // }
-        // objectRegistry.Clear
         currentDeathIndex++;
+        // if that was last state
+        if (currentDeathIndex >= currentLevelState.levelPhases.Count)
+        {
+            objectRegistry.Clear();
+            dialogueController.EnqueueParagraph(nextSceneDialogue);
+            // TODO - stop player movement
+            if (nextSceneName == "NONE")
+            {
+                // means current scene is final
+                // in the end - show end screen
+
+                return;
+            }
+            else
+            {
+                GoNextLevel();
+            }
+            return;
+        }
+        // objectRegistry.Clear
         ApplyCurrentPhase();
+    }
+
+    private void GoNextLevel()
+    {
+        SceneManager.LoadScene(nextSceneName);
     }
 
     private IEnumerator DelayAndResetPlayer(bool alive)
@@ -139,7 +163,7 @@ public class LevelController : MonoBehaviour
     }
 
 
-    public void LoadLevel(LevelState levelState, GameDialogue gameDialogue, float blockMoveTime)
+    public void LoadLevel(LevelState levelState, GameDialogue gameDialogue, float blockMoveTime, string nextSceneName, GameDialogue nextSceneDialogue)
     {
         // init
         Debug.Log("LoadLevel");
@@ -155,6 +179,8 @@ public class LevelController : MonoBehaviour
         currentLevelState = levelState;
         currentDeathIndex = 0;  // first phase should always reset all active objects
         ApplyCurrentPhase();
+        this.nextSceneName = nextSceneName;
+        this.nextSceneDialogue = nextSceneDialogue;
     }
 
 

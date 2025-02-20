@@ -1,0 +1,39 @@
+using System.Collections.Generic;
+using UnityEngine;
+
+public class SetActiveTrigger : BaseTriggerHandler
+{
+    [SerializeField] GameDialogue activationTriggerDialogue;
+    DialogueController dialogueController;
+    [SerializeField] List<GameObject> objectsToActivate;
+    [SerializeField] List<GameObject> objectsToDeactivate;
+
+    [SerializeField] bool onlyOne = false;
+    private bool activated = false;
+    void Awake()
+    {
+        dialogueController = FindObjectOfType<DialogueController>();
+        if (dialogueController == null)
+        {
+            Debug.LogError("Can't find dialogueController!");
+        }
+    }
+
+    public override void OnTrigger()
+    {
+        if (onlyOne && activated)
+        {
+            return;
+        }
+        activated = true;
+        foreach (GameObject gameObject in objectsToActivate)
+        {
+            gameObject.SetActive(true);
+        }
+        foreach (GameObject gameObject in objectsToDeactivate)
+        {
+            gameObject.SetActive(false);
+        }
+        dialogueController.EnqueueParagraph(activationTriggerDialogue);
+    }
+}

@@ -20,6 +20,11 @@ public class LevelController : MonoBehaviour
     float bestTimer = float.MaxValue;
     private static string TIME_FORMAT = "mm':'ss':'ff";
 
+    // code for controlling level phases
+    private LevelState currentLevelState;
+    private int currentDeathIndex = 0;
+    public static LevelController Instance { get; private set; }
+
     void Awake()
     {
         player = FindObjectOfType<PlayerMovement>();
@@ -30,6 +35,17 @@ public class LevelController : MonoBehaviour
         levelTimerText.text = currentTime.ToString(TIME_FORMAT);
         bestTimerText.text = "best time: ?";
         player.ResetPlayer(levelStart.transform.position);
+
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+            return;
+        }
     }
 
     // Update is called once per frame
@@ -44,6 +60,12 @@ public class LevelController : MonoBehaviour
             started = true;
         }
         UpdateLevelTimer();
+
+        // tmp killbind
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            OnTrueDeath();
+        }
     }
 
     void UpdateLevelTimer()
@@ -83,6 +105,16 @@ public class LevelController : MonoBehaviour
         Debug.Log("OnTrueDeath");
         // todo animation of death
         StartCoroutine(DelayAndResetPlayer(false));
+
+        // if that was last state
+        // if (currentLevelState == null || currentDeathIndex >= currentLevelState.levelPhases.Count)
+        // {
+        //     LoadNextLevel();
+        //     return;
+        // }
+        // objectRegistry.Clear
+        currentDeathIndex++;
+        ApplyCurrentPhase();
     }
 
     private IEnumerator DelayAndResetPlayer(bool alive)
@@ -94,5 +126,65 @@ public class LevelController : MonoBehaviour
         yield return new WaitForSeconds(2f);
         player.ResetPlayer(levelStart.transform.position);
         finished = false;
+    }
+
+
+    public void LoadLevel(LevelState levelState)
+    {
+        currentLevelState = levelState;
+        currentDeathIndex = 0;
+        ApplyCurrentPhase();
+    }
+
+
+    private void ApplyCurrentPhase()
+    {
+        LevelPhase phase = currentLevelState.levelPhases[currentDeathIndex];
+        Debug.Log("ApplyCurrentPhase: " + phase.ToString());
+
+        foreach (string id in phase.objectsToActivate)
+        {
+            PhaseLevelObject obj = GetObjectByID(id);
+            if (obj)
+            {
+                obj.gameObject.SetActive(true);
+            }
+            else
+            {
+                Debug.LogError("Can't find object to activate: " + id);
+            }
+        }
+
+        foreach (string id in phase.objectsToDeactivate)
+        {
+            PhaseLevelObject obj = GetObjectByID(id);
+            if (obj)
+            {
+                obj.gameObject.SetActive(false);
+            }
+            else
+            {
+                Debug.LogError("Can't find object to deactivate: " + id);
+            }
+        }
+    }
+
+    private static Dictionary<string, PhaseLevelObject> objectRegistry = new Dictionary<string, PhaseLevelObject>();
+
+    public static void RegisterObject(PhaseLevelObject obj)
+    {
+        if (!objectRegistry.ContainsKey(obj.objectID))
+        {
+            objectRegistry.Add(obj.objectID, obj);
+        }
+        else
+        {
+            Debug.LogError("met object inside RegisterObject with same id twice: " + obj.objectID);
+        }
+    }
+
+    private static PhaseLevelObject GetObjectByID(string id)
+    {
+        return objectRegistry.TryGetValue(id, out PhaseLevelObject obj) ? obj : null;
     }
 }

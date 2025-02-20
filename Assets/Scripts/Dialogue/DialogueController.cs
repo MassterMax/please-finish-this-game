@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
@@ -53,7 +52,11 @@ public class DialogueController : MonoBehaviour
 
     private IEnumerator TypeParagraph(GameDialogue gameDialogue) {
         isTyping = true;
-        foreach (string p in gameDialogue.paragraphs) {
+        string[] paragraphsToPrint = gameDialogue.paragraphs;
+        if (gameDialogue.randomParagraph) {
+            paragraphsToPrint = new string[]{gameDialogue.paragraphs[UnityEngine.Random.Range(0, gameDialogue.paragraphs.Length)]};
+        }
+        foreach (string p in paragraphsToPrint) {
             if (!isTyping) {
                 break;
             }

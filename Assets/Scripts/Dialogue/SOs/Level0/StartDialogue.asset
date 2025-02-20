@@ -18,8 +18,12 @@ MonoBehaviour:
   - I promise it will be fun.
   - You look like a pro, so you probably know that A and D make you move, and SPACE
     makes you jump :-)
+  - Your goal is to reach the finish line as quickly as possible. It is important
+    to finish each level quickly!
+  - There's also a timer and a life counter in the top left corner, but a pro like
+    you won't need them, will you? :-)
   - Now I'll unlock the controls and you can reach the finish line!!!
   - Go ahead! ^______^
-  emotions: 000000000100000000000000010000000000000001000000
+  emotions: 0000000001000000000000000100000000000000010000000000000001000000
   force: 1
   randomParagraph: 0

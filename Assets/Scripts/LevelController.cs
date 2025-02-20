@@ -14,6 +14,7 @@ public class LevelController : MonoBehaviour
     // UI, TODO - move to other place or make singleton
     [SerializeField] TextMeshProUGUI levelTimerText;
     [SerializeField] TextMeshProUGUI bestTimerText;
+    [SerializeField] List<GameObject> healths;  // 3
 
     // level restart options
     bool started = false;
@@ -25,6 +26,11 @@ public class LevelController : MonoBehaviour
     // code for controlling level phases
     private LevelState currentLevelState;
     private int currentDeathIndex = 0;
+
+    private const int MAX_HEALTH = 3;
+    private int healthCounter = MAX_HEALTH;
+
+    // Instance
     public static LevelController Instance { get; private set; }
 
     // for the mext scene
@@ -95,7 +101,7 @@ public class LevelController : MonoBehaviour
     {
         bestTimer = Mathf.Min(bestTimer, levelTimer);
         TimeSpan bestTime = System.TimeSpan.FromSeconds(bestTimer);
-        bestTimerText.text = "best time: " + bestTime.ToString(TIME_FORMAT);
+        bestTimerText.text = "best " + bestTime.ToString(TIME_FORMAT);
     }
 
     public void OnFinishEnter()
@@ -108,7 +114,7 @@ public class LevelController : MonoBehaviour
     public void OnTrueDeath()
     {
         Debug.Log("OnTrueDeath");
-        // todo animation of death
+        DecreaseUserHealth();
         StartCoroutine(DelayAndResetPlayer(false));
 
         currentDeathIndex++;
@@ -162,6 +168,22 @@ public class LevelController : MonoBehaviour
         finished = false;
     }
 
+    private void DecreaseUserHealth() {
+        healthCounter -= 1;
+        foreach (GameObject health in healths) {
+            health.SetActive(false);
+        }
+        healths[healthCounter].SetActive(true);
+    }
+
+    private void ResetUserHealth() {
+        healthCounter = MAX_HEALTH;
+        foreach (GameObject health in healths) {
+            health.SetActive(false);
+        }
+        healths[healthCounter].SetActive(true);
+    }
+
 
     public void LoadLevel(LevelState levelState, GameDialogue gameDialogue, float blockMoveTime, string nextSceneName, GameDialogue nextSceneDialogue)
     {
@@ -169,7 +191,7 @@ public class LevelController : MonoBehaviour
         Debug.Log("LoadLevel");
         TimeSpan currentTime = System.TimeSpan.FromSeconds(0);
         levelTimerText.text = currentTime.ToString(TIME_FORMAT);
-        bestTimerText.text = "best time: ?";
+        bestTimerText.text = "best ?";
 
         StartCoroutine(BlockPlayerMoveOnStart(blockMoveTime));
 
@@ -181,6 +203,8 @@ public class LevelController : MonoBehaviour
         ApplyCurrentPhase();
         this.nextSceneName = nextSceneName;
         this.nextSceneDialogue = nextSceneDialogue;
+        currentDeathIndex = 0;
+        ResetUserHealth();
     }
 
 

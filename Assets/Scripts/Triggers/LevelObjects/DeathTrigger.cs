@@ -24,6 +24,8 @@ public class DeathTrigger : BaseTriggerHandler
 
     public override void OnTrigger()
     {
+        // start conversation
+        dialogueController.EnqueueParagraph(deathDialogue);
         if (levelController == null)
         {
             Debug.LogError("Can't find levelController!");
@@ -32,8 +34,5 @@ public class DeathTrigger : BaseTriggerHandler
         {
             levelController.OnTrueDeath();
         }
-
-        // start conversation
-        dialogueController.EnqueueParagraph(deathDialogue);
     }
 }

@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class LevelStateLoader : MonoBehaviour
 {
-    [SerializeField] LevelState levelState;
     [SerializeField] GameDialogue levelStartDialogue;
     [SerializeField] float blockMoveTime;
     
@@ -11,6 +10,6 @@ public class LevelStateLoader : MonoBehaviour
 
     private void Start()
     {
-        LevelController.Instance.LoadLevel(levelState, levelStartDialogue, blockMoveTime, nextSceneName, nextSceneDialogue);
+        LevelController.Instance.LoadLevel(levelStartDialogue, blockMoveTime, nextSceneName, nextSceneDialogue);
     }
 }

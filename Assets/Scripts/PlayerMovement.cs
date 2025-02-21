@@ -32,9 +32,12 @@ public class PlayerMovement : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
-    public void ResetPlayer(Vector2 position)
+    public void ResetPlayerPos(Vector2 position)
     {
         transform.position = position;
+    }
+
+    public void AllowPlayerMove() {
         canMove = true;
         gameObject.SetActive(true);
     }

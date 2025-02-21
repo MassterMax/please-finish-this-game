@@ -46,6 +46,7 @@ public class DialogueController : MonoBehaviour
 
     public void EnqueueParagraph(GameDialogue gameDialogue)
     {
+        Debug.Log("EnqueueParagraph inside DialogueController");
         if (isTyping && !gameDialogue.force)
         {
             // gentle ignore

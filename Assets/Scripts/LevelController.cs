@@ -24,8 +24,6 @@ public class LevelController : MonoBehaviour
     private static string TIME_FORMAT = "mm':'ss':'ff";
 
     // code for controlling level phases
-    private LevelState currentLevelState;
-    private int currentDeathIndex = 0;
 
     private const int MAX_HEALTH = 3;
     private int healthCounter = MAX_HEALTH;
@@ -33,9 +31,16 @@ public class LevelController : MonoBehaviour
     // Instance
     public static LevelController Instance { get; private set; }
 
+    public const float FINISH_DELAY = 1f;
+    private bool playerReset = false;
+
     // for the mext scene
     private string nextSceneName;
     private GameDialogue nextSceneDialogue;
+
+    public bool IsPlayerReset() {
+        return playerReset;
+    }
 
     void Awake()
     {
@@ -107,6 +112,7 @@ public class LevelController : MonoBehaviour
     public void OnFinishEnter()
     {
         Debug.Log("OnFinishEnter");
+        playerReset = false;
         SetBestTime();
         StartCoroutine(DelayAndResetPlayer(true));
     }
@@ -114,14 +120,13 @@ public class LevelController : MonoBehaviour
     public void OnTrueDeath()
     {
         Debug.Log("OnTrueDeath");
+        playerReset = false;
         DecreaseUserHealth();
         StartCoroutine(DelayAndResetPlayer(false));
 
-        currentDeathIndex++;
         // if that was last state
-        if (currentDeathIndex >= currentLevelState.levelPhases.Count)
+        if (healthCounter == 0)
         {
-            objectRegistry.Clear();
             dialogueController.EnqueueParagraph(nextSceneDialogue);
             // TODO - stop player movement
             if (nextSceneName == "NONE")
@@ -137,8 +142,6 @@ public class LevelController : MonoBehaviour
             }
             return;
         }
-        // objectRegistry.Clear
-        ApplyCurrentPhase();
     }
 
     private void GoNextLevel()
@@ -152,19 +155,19 @@ public class LevelController : MonoBehaviour
         ResetLevelTimer();
         finished = true;
         player.StopPlayer(alive);
-        yield return new WaitForSeconds(2f);
-        player.ResetPlayer(levelStart.transform.position);
+        yield return new WaitForSeconds(FINISH_DELAY);
+        player.ResetPlayerPos(levelStart.transform.position);
+        playerReset = true;
+        yield return new WaitForSeconds(FINISH_DELAY);
+        player.AllowPlayerMove();
         finished = false;
     }
 
-    private IEnumerator BlockPlayerMoveOnStart(float time)
+    private IEnumerator AllowPlayerMoveAfterStart(float time)
     {
-        Debug.Log("BlockPlayerMoveOnStart");
-        finished = true;
-        player.ResetPlayer(levelStart.transform.position);
-        player.StopPlayer(true);
+        Debug.Log("AllowPlayerMoveAfterStart");
         yield return new WaitForSeconds(time);
-        player.ResetPlayer(levelStart.transform.position);
+        player.AllowPlayerMove();
         finished = false;
     }
 
@@ -185,7 +188,7 @@ public class LevelController : MonoBehaviour
     }
 
 
-    public void LoadLevel(LevelState levelState, GameDialogue gameDialogue, float blockMoveTime, string nextSceneName, GameDialogue nextSceneDialogue)
+    public void LoadLevel( GameDialogue gameDialogue, float blockMoveTime, string nextSceneName, GameDialogue nextSceneDialogue)
     {
         // init
         Debug.Log("LoadLevel");
@@ -193,69 +196,16 @@ public class LevelController : MonoBehaviour
         levelTimerText.text = currentTime.ToString(TIME_FORMAT);
         bestTimerText.text = "best ?";
 
-        StartCoroutine(BlockPlayerMoveOnStart(blockMoveTime));
+        finished = true;
+        player.ResetPlayerPos(levelStart.transform.position);
+        player.StopPlayer(true);
+        StartCoroutine(AllowPlayerMoveAfterStart(blockMoveTime));
 
         Debug.Log("Call - LoadLevel - EnqueueParagraph");
         dialogueController.EnqueueParagraph(gameDialogue);
 
-        currentLevelState = levelState;
-        currentDeathIndex = 0;  // first phase should always reset all active objects
-        ApplyCurrentPhase();
         this.nextSceneName = nextSceneName;
         this.nextSceneDialogue = nextSceneDialogue;
-        currentDeathIndex = 0;
         ResetUserHealth();
-    }
-
-
-    private void ApplyCurrentPhase()
-    {
-        LevelPhase phase = currentLevelState.levelPhases[currentDeathIndex];
-        Debug.Log("ApplyCurrentPhase: " + phase.ToString());
-
-        foreach (string id in phase.objectsToActivate)
-        {
-            PhaseLevelObject obj = GetObjectByID(id);
-            if (obj)
-            {
-                obj.gameObject.SetActive(true);
-            }
-            else
-            {
-                Debug.LogError("Can't find object to activate: " + id);
-            }
-        }
-
-        foreach (string id in phase.objectsToDeactivate)
-        {
-            PhaseLevelObject obj = GetObjectByID(id);
-            if (obj)
-            {
-                obj.gameObject.SetActive(false);
-            }
-            else
-            {
-                Debug.LogError("Can't find object to deactivate: " + id);
-            }
-        }
-    }
-
-    private static Dictionary<string, PhaseLevelObject> objectRegistry = new Dictionary<string, PhaseLevelObject>();
-
-    public static void RegisterObject(PhaseLevelObject obj)
-    {
-        if (!objectRegistry.ContainsKey(obj.objectID))
-        {
-            objectRegistry.Add(obj.objectID, obj);
-        }
-        else
-        {
-            Debug.LogError("met object inside RegisterObject with same id twice: " + obj.objectID);
-        }
-    }
-
-    private static PhaseLevelObject GetObjectByID(string id)
-    {
-        return objectRegistry.TryGetValue(id, out PhaseLevelObject obj) ? obj : null;
     }
 }

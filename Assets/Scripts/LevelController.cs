@@ -122,13 +122,15 @@ public class LevelController : MonoBehaviour
         Debug.Log("OnTrueDeath");
         playerReset = false;
         DecreaseUserHealth();
-        StartCoroutine(DelayAndResetPlayer(false));
 
         // if that was last state
         if (healthCounter == 0)
         {
+            started = false;
+            ResetLevelTimer();
+            finished = true;
+            player.StopPlayer(false);
             dialogueController.EnqueueParagraph(nextSceneDialogue);
-            // TODO - stop player movement
             if (nextSceneName == "NONE")
             {
                 // means current scene is final
@@ -143,6 +145,8 @@ public class LevelController : MonoBehaviour
             }
             return;
         }
+
+        StartCoroutine(DelayAndResetPlayer(false));
     }
 
     private void GoNextLevel()
@@ -164,14 +168,6 @@ public class LevelController : MonoBehaviour
         finished = false;
     }
 
-    private IEnumerator AllowPlayerMoveAfterStart(float time)
-    {
-        Debug.Log("AllowPlayerMoveAfterStart");
-        yield return new WaitForSeconds(time);
-        player.AllowPlayerMove();
-        finished = false;
-    }
-
     private void DecreaseUserHealth() {
         healthCounter -= 1;
         foreach (GameObject health in healths) {
@@ -186,6 +182,14 @@ public class LevelController : MonoBehaviour
             health.SetActive(false);
         }
         healths[healthCounter].SetActive(true);
+    }
+
+    private IEnumerator AllowPlayerMoveAfterStart(float time)
+    {
+        Debug.Log("AllowPlayerMoveAfterStart");
+        yield return new WaitForSeconds(time);
+        player.AllowPlayerMove();
+        finished = false;
     }
 
 

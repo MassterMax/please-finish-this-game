@@ -138,6 +138,7 @@ public class LevelController : MonoBehaviour
             {
                 // means current scene is final
                 // in the end - show end screen
+                SoundFXManager.Instance.StopBGMusic();
 
                 return;
             }

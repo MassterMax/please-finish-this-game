@@ -54,4 +54,12 @@ public class SoundFXManager : MonoBehaviour
     {
         effectsVolume = volume;
     }
+
+    public void StopBGMusic() {
+        bgMusic.Pause();
+    }
+
+    public void ResumeBGMusic() {
+        bgMusic.UnPause();
+    }
 }

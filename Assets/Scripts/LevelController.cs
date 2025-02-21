@@ -1,27 +1,21 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 
-using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
+
 public class LevelController : MonoBehaviour
 {
     LevelStart levelStart;
     PlayerMovement player;
     DialogueController dialogueController;
-    // UI, TODO - move to other place or make singleton
-    [SerializeField] TextMeshProUGUI levelTimerText;
-    [SerializeField] TextMeshProUGUI bestTimerText;
-    [SerializeField] List<GameObject> healths;  // 3
+    TimerController timerController;
 
     // level restart options
     bool started = false;
     bool finished = false;
     float levelTimer = 0f;
     float bestTimer = float.MaxValue;
-    private static string TIME_FORMAT = "mm':'ss':'ff";
 
     // code for controlling level phases
 
@@ -38,7 +32,8 @@ public class LevelController : MonoBehaviour
     private string nextSceneName;
     private GameDialogue nextSceneDialogue;
 
-    public bool IsPlayerReset() {
+    public bool IsPlayerReset()
+    {
         return playerReset;
     }
 
@@ -50,6 +45,11 @@ public class LevelController : MonoBehaviour
         if (dialogueController == null)
         {
             Debug.LogError("Can't find dialogueController!");
+        }
+        timerController = FindObjectOfType<TimerController>();
+        if (timerController == null)
+        {
+            Debug.LogError("Can't find timerController!");
         }
 
         if (Instance == null)
@@ -91,22 +91,19 @@ public class LevelController : MonoBehaviour
             return;
         }
         levelTimer += Time.deltaTime;
-        TimeSpan currentTime = System.TimeSpan.FromSeconds(levelTimer);
-        levelTimerText.text = currentTime.ToString(TIME_FORMAT);
+        timerController.SetCurrentTimeText(levelTimer);
     }
 
     void ResetLevelTimer()
     {
         levelTimer = 0f;
-        TimeSpan currentTime = System.TimeSpan.FromSeconds(levelTimer);
-        levelTimerText.text = currentTime.ToString(TIME_FORMAT);
+        timerController.SetCurrentTimeText(levelTimer);
     }
 
     void SetBestTime()
     {
         bestTimer = Mathf.Min(bestTimer, levelTimer);
-        TimeSpan bestTime = System.TimeSpan.FromSeconds(bestTimer);
-        bestTimerText.text = "best " + bestTime.ToString(TIME_FORMAT);
+        timerController.SetBestTimeText(bestTimer);
     }
 
     public void OnFinishEnter()
@@ -168,20 +165,16 @@ public class LevelController : MonoBehaviour
         finished = false;
     }
 
-    private void DecreaseUserHealth() {
+    private void DecreaseUserHealth()
+    {
         healthCounter -= 1;
-        foreach (GameObject health in healths) {
-            health.SetActive(false);
-        }
-        healths[healthCounter].SetActive(true);
+        timerController.SetHealth(healthCounter);
     }
 
-    private void ResetUserHealth() {
+    private void ResetUserHealth()
+    {
         healthCounter = MAX_HEALTH;
-        foreach (GameObject health in healths) {
-            health.SetActive(false);
-        }
-        healths[healthCounter].SetActive(true);
+        timerController.SetHealth(healthCounter);
     }
 
     private IEnumerator AllowPlayerMoveAfterStart(float time)
@@ -193,13 +186,11 @@ public class LevelController : MonoBehaviour
     }
 
 
-    public void LoadLevel( GameDialogue gameDialogue, float blockMoveTime, string nextSceneName, GameDialogue nextSceneDialogue)
+    public void LoadLevel(GameDialogue gameDialogue, float blockMoveTime, string nextSceneName, GameDialogue nextSceneDialogue)
     {
         // init
         Debug.Log("LoadLevel");
-        TimeSpan currentTime = System.TimeSpan.FromSeconds(0);
-        levelTimerText.text = currentTime.ToString(TIME_FORMAT);
-        bestTimerText.text = "best ?";
+        timerController.ResetTimeText();
 
         finished = true;
         player.ResetPlayerPos(levelStart.transform.position);

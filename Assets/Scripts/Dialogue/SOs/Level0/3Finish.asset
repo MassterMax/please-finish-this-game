@@ -13,9 +13,10 @@ MonoBehaviour:
   m_Name: 3Finish
   m_EditorClassIdentifier: 
   paragraphs:
-  - Wow! You are so cool!!!!! :^) Let's do it again!
-  - Cool!! ^___^ Can you beat your current record?
+  - Let's finish again! :^) Just try not to die!!!
+  - Cool!! ^___^ Can you beat your current record again without dying?
   - Amazing job! Finish this level as many times as you want!
-  emotions: 010000000100000001000000
+  - Nice! Good thing you're not trying to die :-)
+  emotions: 04000000010000000100000004000000
   force: 1
   randomParagraph: 1

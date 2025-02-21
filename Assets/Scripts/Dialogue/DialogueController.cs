@@ -10,9 +10,7 @@ public class DialogueController : MonoBehaviour
     [SerializeField] TextMeshProUGUI dialogue;
     [SerializeField] Image emotionImage;
     [SerializeField] float typingSpeed = 5f;
-    [SerializeField] float timeBetweenParagraphs = 1.5f;
-
-    string p;
+    [SerializeField] float timeBetweenParagraphs = 2.5f;
 
     // typing
     private Coroutine paragraphCoroutine;
@@ -75,14 +73,18 @@ public class DialogueController : MonoBehaviour
         Debug.Log("inside TypeParagraph");
         isTyping = true;
         string[] paragraphsToPrint = gameDialogue.paragraphs;
-        if (gameDialogue.randomParagraph)
-        {
-            paragraphsToPrint = new string[] { gameDialogue.paragraphs[UnityEngine.Random.Range(0, gameDialogue.paragraphs.Length)] };
-        }
+        Emotions[] emotionsToShow = gameDialogue.emotions;
 
         if (gameDialogue.emotions.Length != gameDialogue.paragraphs.Length)
         {
             Debug.LogError("gameDialogue.emotions.Length != gameDialogue.paragraphs.Length, " + gameDialogue.emotions.Length.ToString() + " != " + gameDialogue.paragraphs.Length.ToString());
+        }
+
+        if (gameDialogue.randomParagraph)
+        {
+            int index = UnityEngine.Random.Range(0, gameDialogue.paragraphs.Length);
+            paragraphsToPrint = new string[] { gameDialogue.paragraphs[index] };
+            emotionsToShow =  new Emotions[] { gameDialogue.emotions[index] };
         }
 
         int emotIdx = 0;
@@ -95,9 +97,9 @@ public class DialogueController : MonoBehaviour
             }
             // image logic
             Emotions currentEmotion = Emotions.Neutral;
-            if (emotIdx < gameDialogue.emotions.Length)
+            if (emotIdx < emotionsToShow.Length)
             {
-                currentEmotion = gameDialogue.emotions[emotIdx];
+                currentEmotion = emotionsToShow[emotIdx];
             }
             emotionImage.sprite = emotionToSprite[currentEmotion];
             // print logic

@@ -22,6 +22,9 @@ public class PlayerMovement : MonoBehaviour
     Animator animator;
     SpriteRenderer spriteRenderer;
 
+    // sounds
+    [SerializeField] AudioClip jumpSound;
+
     bool canMove;
 
     void Awake()
@@ -81,6 +84,7 @@ public class PlayerMovement : MonoBehaviour
         // jump logic
         if (Input.GetButtonDown("Jump") && coyoteTimer > 0)
         {
+            SoundFXManager.Instance.PlaySoundFXClip(jumpSound, transform);
             rb.velocity = new Vector2(rb.velocity.x, jumpForce);
         }
 

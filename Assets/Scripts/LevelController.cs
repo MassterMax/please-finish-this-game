@@ -32,6 +32,10 @@ public class LevelController : MonoBehaviour
     private string nextSceneName;
     private GameDialogue nextSceneDialogue;
 
+    // audio clips
+    [SerializeField] AudioClip deathClip;
+    [SerializeField] AudioClip winClip;
+
     public bool IsPlayerReset()
     {
         return playerReset;
@@ -110,6 +114,7 @@ public class LevelController : MonoBehaviour
     {
         Debug.Log("OnFinishEnter");
         playerReset = false;
+        SoundFXManager.Instance.PlaySoundFXClip(winClip, player.transform);
         SetBestTime();
         StartCoroutine(DelayAndResetPlayer(true));
     }
@@ -118,6 +123,7 @@ public class LevelController : MonoBehaviour
     {
         Debug.Log("OnTrueDeath");
         playerReset = false;
+        SoundFXManager.Instance.PlaySoundFXClip(deathClip, player.transform);
         DecreaseUserHealth();
 
         // if that was last state

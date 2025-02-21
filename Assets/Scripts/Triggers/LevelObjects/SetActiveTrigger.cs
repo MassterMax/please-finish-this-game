@@ -10,9 +10,11 @@ public class SetActiveTrigger : BaseTriggerHandler
     [SerializeField] List<GameObject> objectsToDeactivate;
 
     [SerializeField] bool onlyOne = true;
+    AudioClip activationClip;
     private bool activated = false;
     void Awake()
     {
+        activationClip = Resources.Load<AudioClip>("Sounds/activation");
         dialogueController = FindObjectOfType<DialogueController>();
         if (dialogueController == null)
         {
@@ -26,6 +28,7 @@ public class SetActiveTrigger : BaseTriggerHandler
         {
             return;
         }
+        SoundFXManager.Instance.PlaySoundFXClip(activationClip, transform);
         activated = true;
         dialogueController.EnqueueParagraph(activationTriggerDialogue);
         foreach (GameObject gameObject in objectsToActivate)

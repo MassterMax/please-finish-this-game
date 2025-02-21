@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// Instantly changes things
 public class SetActiveTrigger : BaseTriggerHandler
 {
     [SerializeField] GameDialogue activationTriggerDialogue;
@@ -8,7 +9,7 @@ public class SetActiveTrigger : BaseTriggerHandler
     [SerializeField] List<GameObject> objectsToActivate;
     [SerializeField] List<GameObject> objectsToDeactivate;
 
-    [SerializeField] bool onlyOne = false;
+    [SerializeField] bool onlyOne = true;
     private bool activated = false;
     void Awake()
     {
@@ -26,6 +27,7 @@ public class SetActiveTrigger : BaseTriggerHandler
             return;
         }
         activated = true;
+        dialogueController.EnqueueParagraph(activationTriggerDialogue);
         foreach (GameObject gameObject in objectsToActivate)
         {
             gameObject.SetActive(true);
@@ -34,6 +36,5 @@ public class SetActiveTrigger : BaseTriggerHandler
         {
             gameObject.SetActive(false);
         }
-        dialogueController.EnqueueParagraph(activationTriggerDialogue);
     }
 }

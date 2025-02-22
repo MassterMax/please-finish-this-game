@@ -7,8 +7,9 @@ public class SoundFXManager : MonoBehaviour
 
     public static SoundFXManager Instance { get; private set; }
 
-    private float effectsVolume = 0.3f;
-
+    private const float DEFAULT_EFFECTS_VOLUME = 0.3f;
+    private const float DEFAULT_MUSIC_VOLUME = 0.2f;
+    private float effectsVolume;
     private void Awake()
     {
         if (Instance == null)
@@ -22,7 +23,8 @@ public class SoundFXManager : MonoBehaviour
             return;
         }
 
-        SetBGMusicVolume(0.2f);
+        SetMusic(true);
+        SetEffects(true);
     }
 
     // if just want to play clip
@@ -47,14 +49,20 @@ public class SoundFXManager : MonoBehaviour
 
     }
 
-    public void SetBGMusicVolume(float volume)
-    {
-        bgMusic.volume = volume;
+    public void SetMusic(bool state) {
+        if (state) {
+            bgMusic.volume = DEFAULT_MUSIC_VOLUME;
+        } else {
+            bgMusic.volume = 0;
+        }
     }
 
-    public void SetEffectsVolume(float volume)
-    {
-        effectsVolume = volume;
+    public void SetEffects(bool state) {
+        if (state) {
+            effectsVolume = DEFAULT_EFFECTS_VOLUME;
+        } else {
+            effectsVolume = 0;
+        }
     }
 
     public float GetEffectsVolume()

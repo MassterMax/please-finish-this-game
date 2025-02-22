@@ -33,21 +33,8 @@ public class DialogueController : MonoBehaviour
     [SerializeField] List<Sprite> emotionSprites;
     Dictionary<Emotions, Sprite> emotionToSprite = new Dictionary<Emotions, Sprite>();
 
-    public static DialogueController Instance { get; private set; }
-
     void Awake()
     {
-        if (Instance == null)
-        {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
-            return;
-        }
-
         var myEnumMemberCount = Enum.GetNames(typeof(Emotions)).Length;
         if (myEnumMemberCount != emotionSprites.Count)
         {

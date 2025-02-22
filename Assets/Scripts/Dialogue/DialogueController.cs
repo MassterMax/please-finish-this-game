@@ -5,27 +5,48 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 public class DialogueController : MonoBehaviour
 {
     [SerializeField] TextMeshProUGUI dialogue;
     [SerializeField] Image emotionImage;
-    [SerializeField] float typingSpeed = 5f;
+    [SerializeField] float typingSpeed = 0.2f;
     [SerializeField] float timeBetweenParagraphs = 2.5f;
+    [SerializeField] AudioClip typingClip;
+
+    [Range(1, 5)]
+    [SerializeField] int audioSoundFreq;
+    [Range(-3, 3)]
+    [SerializeField] private float minPitch = 0.5f;
+    [Range(-3, 3)]
+    [SerializeField] private float maxPitch = 3f;
+    AudioSource audioSource;
 
     // typing
     private Coroutine paragraphCoroutine;
     private bool isTyping;
 
     private const string HTML_ALPHA = "<color=#00000000>";
-    private const float MAX_TYPE_TIME = 0.1f;
     private const float CHAR_FOR_MINUTE = 2500;  // 750
 
     // for emotions - saved resource
     [SerializeField] List<Sprite> emotionSprites;
     Dictionary<Emotions, Sprite> emotionToSprite = new Dictionary<Emotions, Sprite>();
 
+    public static DialogueController Instance { get; private set; }
+
     void Awake()
     {
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+            return;
+        }
 
         var myEnumMemberCount = Enum.GetNames(typeof(Emotions)).Length;
         if (myEnumMemberCount != emotionSprites.Count)
@@ -39,6 +60,7 @@ public class DialogueController : MonoBehaviour
             emotionToSprite[emot] = emotionSprites[i];
         }
 
+        audioSource = this.gameObject.AddComponent<AudioSource>();
         gameObject.SetActive(false);
     }
 
@@ -111,12 +133,14 @@ public class DialogueController : MonoBehaviour
 
             foreach (char c in p.ToCharArray())
             {
+                // play audio
+                PlayDiaologueSound(aplhaIndex);
+
                 aplhaIndex++;
                 dialogue.text = originalText;
                 string displayedText = dialogue.text.Insert(aplhaIndex, HTML_ALPHA);
                 dialogue.text = displayedText;
-
-                yield return new WaitForSeconds(MAX_TYPE_TIME / typingSpeed);
+                yield return new WaitForSeconds(typingSpeed);
             }
             // sleep
             yield return new WaitForSeconds(timeBetweenParagraphs + additionalTime);
@@ -125,5 +149,14 @@ public class DialogueController : MonoBehaviour
 
         gameObject.SetActive(false);
         isTyping = false;
+    }
+
+    private void PlayDiaologueSound(int index) {
+        // return;
+        if (index % audioSoundFreq == 0) {
+            // audioSource.Stop();
+            audioSource.pitch = UnityEngine.Random.Range(minPitch, maxPitch);
+            audioSource.PlayOneShot(typingClip, SoundFXManager.Instance.GetEffectsVolume() / 3);
+        }
     }
 }

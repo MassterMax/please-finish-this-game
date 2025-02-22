@@ -5679,7 +5679,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   levelStartDialogue: {fileID: 11400000, guid: 12ac513331337824f9a3b150d5f00650, type: 2}
-  blockMoveTime: 0.38
+  blockMoveTime: 0.4
   nextSceneDialogue: {fileID: 11400000, guid: d3fcc12a50d26c848ba52fda70f88808, type: 2}
   nextSceneName: NONE
 --- !u!1 &346571127
@@ -10004,8 +10004,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dialogue: {fileID: 1795665885}
   emotionImage: {fileID: 1856046223}
-  typingSpeed: 4
-  timeBetweenParagraphs: 2
+  typingSpeed: 0.04
+  timeBetweenParagraphs: 2.5
+  typingClip: {fileID: 8300000, guid: bd429eb1378c6b94f9aba5654f4f34cf, type: 3}
+  audioSoundFreq: 3
+  minPitch: 0.5
+  maxPitch: 1
   emotionSprites:
   - {fileID: 21300000, guid: b7d727ac711783447b00cc2fe5548da7, type: 3}
   - {fileID: 21300000, guid: bccc287b8ac1a894580ad5f5677e248b, type: 3}

@@ -7,7 +7,7 @@ public class SoundFXManager : MonoBehaviour
 
     public static SoundFXManager Instance { get; private set; }
 
-    private float effectsVolume = 0.2f;
+    private float effectsVolume = 0.3f;
 
     private void Awake()
     {
@@ -21,6 +21,8 @@ public class SoundFXManager : MonoBehaviour
             Destroy(gameObject);
             return;
         }
+
+        SetBGMusicVolume(0.2f);
     }
 
     // if just want to play clip
@@ -53,6 +55,11 @@ public class SoundFXManager : MonoBehaviour
     public void SetEffectsVolume(float volume)
     {
         effectsVolume = volume;
+    }
+
+    public float GetEffectsVolume()
+    {
+        return effectsVolume;
     }
 
     public void StopBGMusic() {

@@ -160,6 +160,10 @@ public class LevelController : MonoBehaviour
 
     private IEnumerator DelayAndResetPlayer(bool alive)
     {
+        if (!alive) {
+            SoundFXManager.Instance.StopBGMusic();
+        }
+
         started = false;
         ResetLevelTimer();
         finished = true;
@@ -170,6 +174,10 @@ public class LevelController : MonoBehaviour
         yield return new WaitForSeconds(FINISH_DELAY);
         player.AllowPlayerMove();
         finished = false;
+
+        if (!alive) {
+            SoundFXManager.Instance.ResumeBGMusic();
+        }
     }
 
     private void DecreaseUserHealth()

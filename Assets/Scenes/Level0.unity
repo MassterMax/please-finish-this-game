@@ -6080,8 +6080,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   levelStartDialogue: {fileID: 11400000, guid: 12ac513331337824f9a3b150d5f00650, type: 2}
-  blockMoveTime: 45
-  nextSceneDialogue: {fileID: 11400000, guid: d3fcc12a50d26c848ba52fda70f88808, type: 2}
+  blockMoveTime: 0.45
+  nextSceneDialogue: {fileID: 11400000, guid: fc0b7a1bf2f551d4b9e99a773614efbf, type: 2}
   nextSceneName: Level1
   finalPanel: {fileID: 156094614}
 --- !u!1 &346571127

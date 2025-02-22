@@ -35,7 +35,7 @@ public class LevelController : MonoBehaviour
     // audio clips
     [SerializeField] AudioClip deathClip;
     [SerializeField] AudioClip winClip;
-    
+
     // for final
     GameObject finalPanel;
 
@@ -46,18 +46,6 @@ public class LevelController : MonoBehaviour
 
     void Awake()
     {
-        player = FindObjectOfType<PlayerMovement>();
-        levelStart = FindObjectOfType<LevelStart>();
-        dialogueController = FindObjectOfType<DialogueController>();
-        if (dialogueController == null)
-        {
-            Debug.LogError("Can't find dialogueController!");
-        }
-        timerController = FindObjectOfType<TimerController>();
-        if (timerController == null)
-        {
-            Debug.LogError("Can't find timerController!");
-        }
         if (Instance == null)
         {
             Instance = this;
@@ -142,12 +130,12 @@ public class LevelController : MonoBehaviour
                 // in the end - show end screen
                 SoundFXManager.Instance.StopBGMusic();
                 StartCoroutine(ShowFinalPanel());
-                return;
             }
             else
             {
                 // make an effect that player is restored
-                GoNextLevel();
+                SoundFXManager.Instance.StopBGMusic();
+                StartCoroutine(GoNextLevelAfterDelay());
             }
             return;
         }
@@ -155,9 +143,21 @@ public class LevelController : MonoBehaviour
         StartCoroutine(DelayAndResetPlayer(false));
     }
 
+    private IEnumerator GoNextLevelAfterDelay()
+    {
+        while (dialogueController.GetIsTyping())
+        {
+            yield return new WaitForFixedUpdate();
+        }
+        Debug.Log("Go next level!");
+        GoNextLevel();
+        SoundFXManager.Instance.ResumeBGMusic();
+    }
+
     private IEnumerator ShowFinalPanel()
     {
-        while (dialogueController.GetIsTyping()) {
+        while (dialogueController.GetIsTyping())
+        {
             yield return new WaitForFixedUpdate();
         }
         finalPanel.SetActive(true);
@@ -172,7 +172,8 @@ public class LevelController : MonoBehaviour
 
     private IEnumerator DelayAndResetPlayer(bool alive)
     {
-        if (!alive) {
+        if (!alive)
+        {
             SoundFXManager.Instance.StopBGMusic();
         }
 
@@ -187,7 +188,8 @@ public class LevelController : MonoBehaviour
         player.AllowPlayerMove();
         finished = false;
 
-        if (!alive) {
+        if (!alive)
+        {
             SoundFXManager.Instance.ResumeBGMusic();
         }
     }
@@ -215,6 +217,20 @@ public class LevelController : MonoBehaviour
 
     public void LoadLevel(GameDialogue gameDialogue, float blockMoveTime, string nextSceneName, GameDialogue nextSceneDialogue, GameObject finalPanel)
     {
+        // init links to other controllers
+        player = FindObjectOfType<PlayerMovement>();
+        levelStart = FindObjectOfType<LevelStart>();
+        dialogueController = FindObjectOfType<DialogueController>();
+        if (dialogueController == null)
+        {
+            Debug.LogError("Can't find dialogueController!");
+        }
+        timerController = FindObjectOfType<TimerController>();
+        if (timerController == null)
+        {
+            Debug.LogError("Can't find timerController!");
+        }
+
         // init
         Debug.Log("LoadLevel");
         timerController.ResetTimeText();

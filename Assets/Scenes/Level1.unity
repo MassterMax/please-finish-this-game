@@ -32052,8 +32052,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0516ed3d5a3a79d458a3a84100a8e2e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelStartDialogue: {fileID: 11400000, guid: 12ac513331337824f9a3b150d5f00650, type: 2}
-  blockMoveTime: 5
+  levelStartDialogue: {fileID: 11400000, guid: 0e5117052da7db349bc3618f1a63b0b9, type: 2}
+  blockMoveTime: 15
   nextSceneDialogue: {fileID: 11400000, guid: d3fcc12a50d26c848ba52fda70f88808, type: 2}
   nextSceneName: NONE
   finalPanel: {fileID: 156094614}

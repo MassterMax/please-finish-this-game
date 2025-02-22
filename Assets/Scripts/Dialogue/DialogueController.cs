@@ -53,7 +53,11 @@ public class DialogueController : MonoBehaviour
         }
 
         audioSource = this.gameObject.AddComponent<AudioSource>();
-        gameObject.SetActive(false);
+    }
+
+    void Start()
+    {
+        // gameObject.SetActive(false);
     }
 
     public void EnqueueParagraph(GameDialogue gameDialogue)

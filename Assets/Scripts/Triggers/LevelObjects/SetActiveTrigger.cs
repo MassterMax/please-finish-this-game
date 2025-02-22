@@ -12,6 +12,7 @@ public class SetActiveTrigger : BaseTriggerHandler
     [SerializeField] bool onlyOne = true;
     AudioClip activationClip;
     private bool activated = false;
+    [SerializeField] bool shouldPlaySound = true;
     void Awake()
     {
         activationClip = Resources.Load<AudioClip>("Sounds/activation");
@@ -28,7 +29,10 @@ public class SetActiveTrigger : BaseTriggerHandler
         {
             return;
         }
-        SoundFXManager.Instance.PlaySoundFXClip(activationClip, transform);
+        if (shouldPlaySound)
+        {
+            SoundFXManager.Instance.PlaySoundFXClip(activationClip, transform);
+        }
         activated = true;
         if (activationTriggerDialogue != null)
         {

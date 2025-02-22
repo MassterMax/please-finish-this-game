@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   paragraphs:
   - It is dangerous to fall into the pits.
-  - ' It''s a good thing I left the finish line for you!'
+  - It's a good thing I left the finish line for you!
   emotions: 0000000001000000
   force: 1
   randomParagraph: 0

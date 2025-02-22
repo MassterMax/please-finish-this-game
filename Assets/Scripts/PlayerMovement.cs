@@ -35,6 +35,10 @@ public class PlayerMovement : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
+    public float GetYVelocity() {
+        return rb.velocity.y;
+    }
+
     public void ResetPlayerPos(Vector2 position)
     {
         transform.position = position;

@@ -248,4 +248,9 @@ public class LevelController : MonoBehaviour
         this.finalPanel = finalPanel;
         ResetUserHealth();
     }
+
+    public float GetPlayerYVelocity() {
+        return player.GetYVelocity();
+    }
+
 }

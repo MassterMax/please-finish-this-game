@@ -398,7 +398,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 52287859}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 28b1f38d935fe634e858fd2f5df95eb0, type: 3}
+  m_Script: {fileID: 11500000, guid: 3301a1d533a77fb4e98a4837c3595f08, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   activationTriggerDialogue: {fileID: 11400000, guid: 4bfdf0046db00ed4e9a99e06a945c92d, type: 2}
@@ -5891,15 +5891,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 286154098}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 28b1f38d935fe634e858fd2f5df95eb0, type: 3}
+  m_Script: {fileID: 11500000, guid: 3301a1d533a77fb4e98a4837c3595f08, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   activationTriggerDialogue: {fileID: 11400000, guid: 1e72499756cf0414a9ec9b55dab457ba, type: 2}
   objectsToActivate:
   - {fileID: 1068343160}
-  - {fileID: 1881936133}
-  - {fileID: 963262141}
   - {fileID: 2084196448}
+  - {fileID: 963262141}
+  - {fileID: 1881936133}
   objectsToDeactivate:
   - {fileID: 1194107661}
   onlyOne: 1
@@ -12410,7 +12410,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2084196448}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 28b1f38d935fe634e858fd2f5df95eb0, type: 3}
+  m_Script: {fileID: 11500000, guid: 3301a1d533a77fb4e98a4837c3595f08, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   activationTriggerDialogue: {fileID: 11400000, guid: d4019d377d4a965439a67186d56b7ad5, type: 2}

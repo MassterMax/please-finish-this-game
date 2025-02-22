@@ -15,6 +15,6 @@ MonoBehaviour:
   paragraphs:
   - You got to the coins anyway.
   - "Frankly, your desire to die annoys me.\r"
-  emotions: 0200000003000000
+  emotions: 0000000003000000
   force: 1
   randomParagraph: 0

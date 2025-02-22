@@ -40,8 +40,7 @@ public class CoinController : MonoBehaviour
     {
         foreach (Coin coin in coins)
         {
-            coin.ResetPos();
-            coin.DeactivateGravity();
+            coin.Deactivate();
         }
     }
 

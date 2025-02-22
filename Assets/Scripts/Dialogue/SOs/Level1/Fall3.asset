@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   paragraphs:
   - WOW!!!
-  - If you fall from a higher height, you can take damage!
+  - If you fall from a higher height into this pit, you can take damage!
   - But you're not going to do that, are you?
   emotions: 000000000000000004000000
   force: 0

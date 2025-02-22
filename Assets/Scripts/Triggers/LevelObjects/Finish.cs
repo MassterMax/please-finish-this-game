@@ -31,6 +31,13 @@ public class Finish : BaseTriggerHandler
         }
 
         // start conversation
-        dialogueController.EnqueueParagraph(finishDialogue);
+        if (finishDialogue != null)
+        {
+            dialogueController.EnqueueParagraph(finishDialogue);
+        }
+        else
+        {
+            Debug.LogWarning("finishDialogue is NULL!");
+        }
     }
 }

@@ -30,7 +30,14 @@ public class SetActiveTrigger : BaseTriggerHandler
         }
         SoundFXManager.Instance.PlaySoundFXClip(activationClip, transform);
         activated = true;
-        dialogueController.EnqueueParagraph(activationTriggerDialogue);
+        if (activationTriggerDialogue != null)
+        {
+            dialogueController.EnqueueParagraph(activationTriggerDialogue);
+        }
+        else
+        {
+            Debug.LogWarning("activationTriggerDialogue is NULL!");
+        }
         foreach (GameObject gameObject in objectsToActivate)
         {
             gameObject.SetActive(true);

@@ -10,13 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 92850cb4c5ab6ca44bab66086660c2ae, type: 3}
-  m_Name: StartLevel1
+  m_Name: FirstDevilMet
   m_EditorClassIdentifier: 
   paragraphs:
-  - This level should be more interesting!!
-  - Stay away from my little devils unless you want to die!
-  - Don't try to go to the right side, there's deadly lava there...
-  - And, please, finish this level and do not die, okay?
-  emotions: 01000000000000000000000004000000
+  - What??
+  - I couldn't let you die, so I changed the source code of the monsters.
+  - Please, finish this level and do not die, okay?
+  emotions: 040000000000000003000000
   force: 1
   randomParagraph: 0

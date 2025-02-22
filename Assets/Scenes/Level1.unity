@@ -35636,6 +35636,9 @@ MonoBehaviour:
   leftUpperBorder: {fileID: 1048616013}
   rightDownBorder: {fileID: 100650372}
   speed: 2
+  kissClip: {fileID: 8300000, guid: 58812288fc61b2c42b842c7c7515252b, type: 3}
+  kissPrefab: {fileID: 7423890430552259406, guid: e7f08b1498d0d1e43983da6304e1aff1, type: 3}
+  firstKissDialogue: {fileID: 11400000, guid: fdcd1939527986e439d91216fd2840be, type: 2}
 --- !u!50 &1183746668
 Rigidbody2D:
   serializedVersion: 4

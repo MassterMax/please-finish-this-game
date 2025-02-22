@@ -10,42 +10,57 @@ public class Devil : MonoBehaviour
 
     private Rigidbody2D rb;
     private PlayerMovement player;
+    DialogueController dialogueController;
     bool preparing = false;
     bool running = false;
     Vector2 destination;
+    Animator animator;
     SpriteRenderer spriteRenderer;
+    public static bool meet;
+    // for fun
+    [SerializeField] AudioClip kissClip;
+    [SerializeField] GameObject kissPrefab;
+    [SerializeField] GameDialogue firstKissDialogue;
 
     float timeSleep = 0f;
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        player = FindObjectOfType<PlayerMovement>();
         spriteRenderer = GetComponent<SpriteRenderer>();
+        animator = GetComponent<Animator>();
+
+        player = FindObjectOfType<PlayerMovement>();
+        dialogueController = FindObjectOfType<DialogueController>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (timeSleep > 0) {
+        if (timeSleep > 0)
+        {
             timeSleep -= Time.deltaTime;
             return;
         }
         Rotate();
-        if (running) {
+        if (running)
+        {
             Run();
             return;
         }
-        else if (preparing) {
+        else if (preparing)
+        {
             return;
         }
-        if (CheckUserInsideArea()) {
+        if (CheckUserInsideArea())
+        {
             // set red eyes anim
             preparing = true;
             StartCoroutine(DefineDestinationPoint());
         }
     }
-    
-    private bool CheckUserInsideArea() {
+
+    private bool CheckUserInsideArea()
+    {
         Vector2 playerPos = player.transform.position;
         return leftUpperBorder.position.x < playerPos.x && playerPos.x < rightDownBorder.position.x && leftUpperBorder.position.y > playerPos.y && playerPos.y > rightDownBorder.position.y;
     }
@@ -53,20 +68,28 @@ public class Devil : MonoBehaviour
     private IEnumerator DefineDestinationPoint()
     {
         destination = new Vector2(player.transform.position.x, 0);
-        //activate angry sprite
+        animator.SetBool("isAngry", true);
         yield return new WaitForSeconds(2f);
-        if (CheckUserInsideArea()) {
+        if (CheckUserInsideArea())
+        {
+            // set running anim
             destination = new Vector2(player.transform.position.x, 0);
             running = true;
-        } else {
-        //activate angry sprite
-        }  
+            animator.SetBool("isRunning", true);
+        }
+        else
+        {
+            animator.SetBool("isAngry", false);
+        }
         preparing = false;
     }
 
-    private void Run() {
-        if (Mathf.Abs(destination.x - transform.position.x) < 0.01f) {
+    private void Run()
+    {
+        if (Mathf.Abs(destination.x - transform.position.x) < 0.01f)
+        {
             running = false;
+            animator.SetBool("isRunning", false);
             rb.velocity = new Vector2(0, rb.velocity.y);
             return;
         }
@@ -84,7 +107,23 @@ public class Devil : MonoBehaviour
             preparing = false;
             rb.velocity = new Vector2(0, rb.velocity.y);
             timeSleep = 1f;
-        } else if (collider.gameObject.CompareTag("BadWall")) {
+            animator.SetBool("isRunning", false);
+            animator.SetBool("isAngry", false);
+            SoundFXManager.Instance.PlaySoundFXClip(kissClip, transform);
+            GameObject kissObject = Instantiate(kissPrefab, (transform.position + collider.transform.position) / 2, Quaternion.identity);
+            Destroy(kissObject, 1f);
+            if (meet)
+            {
+                // skip
+            }
+            else
+            {
+                dialogueController.EnqueueParagraph(firstKissDialogue);
+                meet = true;
+            }
+        }
+        else if (collider.gameObject.CompareTag("BadWall"))
+        {
             // todo - break it and die;(
         }
     }

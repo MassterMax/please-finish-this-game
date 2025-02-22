@@ -33,6 +33,11 @@ public class DialogueController : MonoBehaviour
     [SerializeField] List<Sprite> emotionSprites;
     Dictionary<Emotions, Sprite> emotionToSprite = new Dictionary<Emotions, Sprite>();
 
+    public bool GetIsTyping()
+    {
+        return isTyping;
+    }
+
     void Awake()
     {
         var myEnumMemberCount = Enum.GetNames(typeof(Emotions)).Length;
@@ -74,6 +79,7 @@ public class DialogueController : MonoBehaviour
         }
 
         Debug.Log("will StartCoroutine - TypeParagraph");
+        isTyping = true;
         paragraphCoroutine = StartCoroutine(TypeParagraph(gameDialogue));
     }
 
@@ -93,7 +99,7 @@ public class DialogueController : MonoBehaviour
         {
             int index = UnityEngine.Random.Range(0, gameDialogue.paragraphs.Length);
             paragraphsToPrint = new string[] { gameDialogue.paragraphs[index] };
-            emotionsToShow =  new Emotions[] { gameDialogue.emotions[index] };
+            emotionsToShow = new Emotions[] { gameDialogue.emotions[index] };
         }
 
         int emotIdx = 0;
@@ -138,9 +144,11 @@ public class DialogueController : MonoBehaviour
         isTyping = false;
     }
 
-    private void PlayDiaologueSound(int index) {
+    private void PlayDiaologueSound(int index)
+    {
         // return;
-        if (index % audioSoundFreq == 0) {
+        if (index % audioSoundFreq == 0)
+        {
             // audioSource.Stop();
             audioSource.pitch = UnityEngine.Random.Range(minPitch, maxPitch);
             audioSource.PlayOneShot(typingClip, SoundFXManager.Instance.GetEffectsVolume() / 3);

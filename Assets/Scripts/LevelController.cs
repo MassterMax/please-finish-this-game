@@ -35,6 +35,9 @@ public class LevelController : MonoBehaviour
     // audio clips
     [SerializeField] AudioClip deathClip;
     [SerializeField] AudioClip winClip;
+    
+    // for final
+    GameObject finalPanel;
 
     public bool IsPlayerReset()
     {
@@ -55,7 +58,6 @@ public class LevelController : MonoBehaviour
         {
             Debug.LogError("Can't find timerController!");
         }
-
         if (Instance == null)
         {
             Instance = this;
@@ -139,7 +141,7 @@ public class LevelController : MonoBehaviour
                 // means current scene is final
                 // in the end - show end screen
                 SoundFXManager.Instance.StopBGMusic();
-
+                StartCoroutine(ShowFinalPanel());
                 return;
             }
             else
@@ -151,6 +153,15 @@ public class LevelController : MonoBehaviour
         }
 
         StartCoroutine(DelayAndResetPlayer(false));
+    }
+
+    private IEnumerator ShowFinalPanel()
+    {
+        while (dialogueController.GetIsTyping()) {
+            yield return new WaitForFixedUpdate();
+        }
+        finalPanel.SetActive(true);
+        Time.timeScale = 0;
     }
 
     private void GoNextLevel()
@@ -201,7 +212,7 @@ public class LevelController : MonoBehaviour
     }
 
 
-    public void LoadLevel(GameDialogue gameDialogue, float blockMoveTime, string nextSceneName, GameDialogue nextSceneDialogue)
+    public void LoadLevel(GameDialogue gameDialogue, float blockMoveTime, string nextSceneName, GameDialogue nextSceneDialogue, GameObject finalPanel)
     {
         // init
         Debug.Log("LoadLevel");
@@ -217,6 +228,7 @@ public class LevelController : MonoBehaviour
 
         this.nextSceneName = nextSceneName;
         this.nextSceneDialogue = nextSceneDialogue;
+        this.finalPanel = finalPanel;
         ResetUserHealth();
     }
 }

@@ -21,6 +21,7 @@ public class Devil : MonoBehaviour
     [SerializeField] AudioClip kissClip;
     [SerializeField] GameObject kissPrefab;
     [SerializeField] GameDialogue firstKissDialogue;
+    Vector2 startPoint;
 
     float timeSleep = 0f;
     void Start()
@@ -31,6 +32,7 @@ public class Devil : MonoBehaviour
 
         player = FindObjectOfType<PlayerMovement>();
         dialogueController = FindObjectOfType<DialogueController>();
+        startPoint = transform.position;
     }
 
     // Update is called once per frame
@@ -51,11 +53,17 @@ public class Devil : MonoBehaviour
         {
             return;
         }
-        if (CheckUserInsideArea())
+        else if (CheckUserInsideArea())
         {
             // set red eyes anim
             preparing = true;
+            destination = new Vector2(player.transform.position.x, 0);
+            animator.SetBool("isAngry", true);
+            animator.SetBool("isMoving", false);
             StartCoroutine(DefineDestinationPoint());
+        } else {
+            // no user so we move to the center gently
+            // MoveCenter();
         }
     }
 
@@ -67,8 +75,6 @@ public class Devil : MonoBehaviour
 
     private IEnumerator DefineDestinationPoint()
     {
-        destination = new Vector2(player.transform.position.x, 0);
-        animator.SetBool("isAngry", true);
         yield return new WaitForSeconds(2f);
         if (CheckUserInsideArea())
         {
@@ -90,12 +96,28 @@ public class Devil : MonoBehaviour
         {
             running = false;
             animator.SetBool("isRunning", false);
+            animator.SetBool("isMoving", false);
+            animator.SetBool("isAngry", false);
             rb.velocity = new Vector2(0, rb.velocity.y);
             return;
         }
         float direction = Mathf.Sign(destination.x - transform.position.x);
         rb.velocity = new Vector2(speed * direction, rb.velocity.y);
     }
+
+    // private void MoveCenter()
+    // {
+    //     if (Mathf.Abs(startPoint.x - transform.position.x) < 0.01f)
+    //     {
+    //         running = false;
+    //         animator.SetBool("isMoving", false);
+    //         rb.velocity = new Vector2(0, rb.velocity.y);
+    //         return;
+    //     }
+    //     animator.SetBool("isMoving", true);
+    //     float direction = Mathf.Sign(startPoint.x - transform.position.x);
+    //     rb.velocity = new Vector2(speed * direction, rb.velocity.y);
+    // }
 
     void OnTriggerEnter2D(Collider2D collider)
     {

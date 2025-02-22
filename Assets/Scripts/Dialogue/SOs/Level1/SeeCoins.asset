@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 92850cb4c5ab6ca44bab66086660c2ae, type: 3}
-  m_Name: Fall1
+  m_Name: SeeCoins
   m_EditorClassIdentifier: 
   paragraphs:
-  - It is dangerous to fall into the pits.
-  - It's a good thing I left the finish line for you!
+  - I'm sorry for making these coins inaccessible.
+  - That's because you can hit your head on them and die ^__^
   emotions: 0000000001000000
-  force: 0
+  force: 1
   randomParagraph: 0

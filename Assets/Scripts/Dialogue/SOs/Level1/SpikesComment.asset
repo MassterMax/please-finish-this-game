@@ -10,11 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 92850cb4c5ab6ca44bab66086660c2ae, type: 3}
-  m_Name: Fall1
+  m_Name: SpikesComment
   m_EditorClassIdentifier: 
   paragraphs:
-  - It is dangerous to fall into the pits.
-  - It's a good thing I left the finish line for you!
-  emotions: 0000000001000000
-  force: 0
+  - You didn't think that trick would work again, did you?
+  emotions: 01000000
+  force: 1
   randomParagraph: 0

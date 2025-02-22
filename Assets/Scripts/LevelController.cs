@@ -161,6 +161,7 @@ public class LevelController : MonoBehaviour
             yield return new WaitForFixedUpdate();
         }
         finalPanel.SetActive(true);
+        SoundFXManager.Instance.PlaySoundFXClip(deathClip, player.transform);
         Time.timeScale = 0;
     }
 

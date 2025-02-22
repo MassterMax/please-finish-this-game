@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 92850cb4c5ab6ca44bab66086660c2ae, type: 3}
+  m_Name: ShadowScript
+  m_EditorClassIdentifier: 
+  paragraphs:
+  - I wonder where those shadows are coming from?
+  - It seems that the textures of the blocks that cast shadows are not loaded...
+  emotions: 0400000000000000
+  force: 0
+  randomParagraph: 0

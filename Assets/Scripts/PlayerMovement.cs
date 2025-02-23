@@ -27,6 +27,11 @@ public class PlayerMovement : MonoBehaviour
 
     bool canMove;
 
+    // straw
+    bool nearStraw = false;
+    GameObject straw;
+    bool holdStraw = false;
+
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -72,6 +77,12 @@ public class PlayerMovement : MonoBehaviour
         if (!canMove)
         {
             return;
+        }
+
+        if (!holdStraw && nearStraw && Input.GetKeyDown(KeyCode.E)) {
+            holdStraw = true;
+            straw.transform.SetParent(transform);
+            straw.transform.localPosition = Vector2.right * 0.3f;
         }
 
         Move();
@@ -181,5 +192,22 @@ public class PlayerMovement : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.DrawWireCube(tmpBoxCollider2D.bounds.center + Vector3.down * groundedCastDistance, tmpBoxCollider2D.bounds.size);
+    }
+
+    void OnTriggerEnter2D(Collider2D collider)
+    {
+        // Debug.Log(collider.gameObject.tag);
+        if (!holdStraw && collider.gameObject.CompareTag("Straw")) {
+            nearStraw = true;
+            straw = collider.gameObject;
+        }
+    }
+
+    void OnTriggerExit2D(Collider2D collider)
+    {
+        // Debug.Log(collision.gameObject.tag);
+        if (!holdStraw && collider.gameObject.CompareTag("Straw")) {
+            nearStraw = false;
+        }
     }
 }

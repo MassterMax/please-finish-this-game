@@ -4,15 +4,29 @@ using UnityEngine;
 
 public class LavaController : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField] GameDialogue lavaDialogue;
+    [SerializeField] List<GameObject> tiles;
+    DialogueController dialogueController;
+    public void StartFlood()
     {
-        
+        dialogueController.EnqueueParagraph(lavaDialogue);
+        StartCoroutine(SetActiveTiles());
     }
 
-    // Update is called once per frame
+    private IEnumerator SetActiveTiles()
+    {
+        foreach (GameObject tile in tiles) {
+            tile.SetActive(true);
+            yield return new WaitForSeconds(1.5f);
+        }
+    }
+    void Start()
+    {
+        dialogueController = FindObjectOfType<DialogueController>();
+    }
+
     void Update()
     {
-        
+
     }
 }

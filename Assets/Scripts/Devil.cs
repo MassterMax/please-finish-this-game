@@ -26,6 +26,7 @@ public class Devil : MonoBehaviour
     [SerializeField] List<GameObject> gameObjectsToActivate;
     [SerializeField] List<GameObject> gameObjectsToDeactivate;
     [SerializeField] ParticleSystem damageParticles;
+    LavaController lavaController;
     // end of shit code
 
     float timeSleep = 0f;
@@ -40,6 +41,7 @@ public class Devil : MonoBehaviour
 
         player = FindObjectOfType<PlayerMovement>();
         dialogueController = FindObjectOfType<DialogueController>();
+        lavaController = FindObjectOfType<LavaController>();
     }
 
     // Update is called once per frame
@@ -197,6 +199,8 @@ public class Devil : MonoBehaviour
             foreach (GameObject gameObject in gameObjectsToDeactivate) {
                 gameObject.SetActive(false);
             }
+
+            lavaController.StartFlood();
 
             gameObject.SetActive(false);
         }

@@ -10,6 +10,7 @@ public class SoundFXManager : MonoBehaviour
     private const float DEFAULT_EFFECTS_VOLUME = 0.3f;
     private const float DEFAULT_MUSIC_VOLUME = 0.2f;
     private float effectsVolume;
+    private AudioClip deathClip;
     private void Awake()
     {
         if (Instance == null)
@@ -25,6 +26,11 @@ public class SoundFXManager : MonoBehaviour
 
         SetMusic(true);
         SetEffects(true);
+        deathClip = Resources.Load<AudioClip>("Sounds/hitHurt");
+    }
+
+    public void PlayDeathSound(Transform spawnTransform) {
+        PlaySoundFXClip(deathClip, spawnTransform);
     }
 
     // if just want to play clip

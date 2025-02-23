@@ -21,9 +21,17 @@ public class Devil : MonoBehaviour
     [SerializeField] AudioClip kissClip;
     [SerializeField] GameObject kissPrefab;
     [SerializeField] GameDialogue firstKissDialogue;
-    Vector2 startPoint;
+
+    // shit code
+    [SerializeField] List<GameObject> gameObjectsToActivate;
+    [SerializeField] List<GameObject> gameObjectsToDeactivate;
+    [SerializeField] ParticleSystem damageParticles;
+    // end of shit code
 
     float timeSleep = 0f;
+    float lastEntranceLevel = -29.5f;
+    bool falling = false;
+    bool onBottom = false;
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -32,12 +40,38 @@ public class Devil : MonoBehaviour
 
         player = FindObjectOfType<PlayerMovement>();
         dialogueController = FindObjectOfType<DialogueController>();
-        startPoint = transform.position;
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (falling)
+        {
+            // Debug.Log("falling, transform.position.y=" + transform.position.y.ToString() + " lastEntranceLevel="+lastEntranceLevel.ToString());
+            if (transform.position.y < lastEntranceLevel)
+            {
+                rb.gravityScale = 0f;
+                rb.velocity = Vector2.zero;
+                transform.position = new Vector3(21.5f, lastEntranceLevel, transform.position.z);
+                falling = false;
+                Debug.Log("fell, transform.position.y=" + transform.position.y.ToString() + " lastEntranceLevel=" + lastEntranceLevel.ToString());
+                onBottom = true;
+            }
+            return;
+        }
+
+        if (onBottom)
+        {
+            if (player.transform.position.y < -29f)
+            {
+                // bump into wall
+                // Debug.Log("will bump into wall");
+                rb.velocity = Vector2.right * 5;
+            }
+
+            return;
+        }
+
         if (timeSleep > 0)
         {
             timeSleep -= Time.deltaTime;
@@ -61,7 +95,9 @@ public class Devil : MonoBehaviour
             animator.SetBool("isAngry", true);
             animator.SetBool("isMoving", false);
             StartCoroutine(DefineDestinationPoint());
-        } else {
+        }
+        else
+        {
             // no user so we move to the center gently
             // MoveCenter();
         }
@@ -123,6 +159,9 @@ public class Devil : MonoBehaviour
     {
         if (collider.gameObject.CompareTag("Player"))  // Check if it's a Player
         {
+            if (onBottom) {
+                return;
+            }
             Debug.Log("warning met player");
             // todo kiss a player
             running = false;
@@ -147,9 +186,31 @@ public class Devil : MonoBehaviour
         else if (collider.gameObject.CompareTag("BadWall"))
         {
             // todo - break it and die;(
+            Debug.LogWarning("Break Lava");
+            SoundFXManager.Instance.PlayDeathSound(transform);
+            Instantiate(damageParticles, transform.position, Quaternion.identity);
+
+            foreach (GameObject gameObject in gameObjectsToActivate) {
+                gameObject.SetActive(true);
+            }
+
+            foreach (GameObject gameObject in gameObjectsToDeactivate) {
+                gameObject.SetActive(false);
+            }
+
+            gameObject.SetActive(false);
+        }
+        else if (collider.gameObject.CompareTag("DevilFall"))
+        {
+            Fall();
         }
     }
-
+    void Fall()
+    {
+        rb.gravityScale = 1f;
+        falling = true;
+        rb.velocity = Vector2.left * 1.5f;
+    }
     void Rotate()
     {
         float direction = Mathf.Sign(destination.x - transform.position.x);

@@ -31,7 +31,7 @@ public class Coin : MonoBehaviour
     void Update()
     {
         if (activated) {
-            if (Mathf.Abs(finalPos.y - transform.position.y) < 0.01f) {
+            if (transform.position.y < finalPos.y) {
                 SoundFXManager.Instance.PlaySoundFXClip(audioClip, transform);
                 rb.velocity = Vector2.zero;
                 transform.position = startPos;

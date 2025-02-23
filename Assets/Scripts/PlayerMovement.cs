@@ -31,6 +31,9 @@ public class PlayerMovement : MonoBehaviour
     bool nearStraw = false;
     GameObject straw;
     bool holdStraw = false;
+    [SerializeField] GameDialogue strawDialoguePickup;
+    [SerializeField] GameDialogue strawDialogueUse;
+    DialogueController dialogueController;
 
     void Awake()
     {
@@ -38,6 +41,7 @@ public class PlayerMovement : MonoBehaviour
         boxCollider = GetComponent<BoxCollider2D>();
         animator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
+        dialogueController = FindObjectOfType<DialogueController>();
     }
 
     public float GetYVelocity() {
@@ -200,6 +204,8 @@ public class PlayerMovement : MonoBehaviour
         if (!holdStraw && collider.gameObject.CompareTag("Straw")) {
             nearStraw = true;
             straw = collider.gameObject;
+            // todo replic
+            dialogueController.EnqueueParagraph(strawDialoguePickup);
         }
     }
 

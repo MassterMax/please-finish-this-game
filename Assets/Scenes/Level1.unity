@@ -40126,6 +40126,8 @@ MonoBehaviour:
   objectGravityScale: 8
   gravityScaleFactor: 1.5
   jumpSound: {fileID: 8300000, guid: 898ec5094a58bc140a54f6b671a3d24d, type: 3}
+  strawDialoguePickup: {fileID: 11400000, guid: 91345fafc4c3339499419e8cd8e835e3, type: 2}
+  strawDialogueUse: {fileID: 0}
 --- !u!95 &1487734474
 Animator:
   serializedVersion: 5

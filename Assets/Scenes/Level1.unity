@@ -32590,7 +32590,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   levelStartDialogue: {fileID: 11400000, guid: 0e5117052da7db349bc3618f1a63b0b9, type: 2}
-  blockMoveTime: 0.15
+  blockMoveTime: 15
   nextSceneDialogue: {fileID: 11400000, guid: d3fcc12a50d26c848ba52fda70f88808, type: 2}
   nextSceneName: NONE
   finalPanel: {fileID: 156094614}
@@ -40127,7 +40127,9 @@ MonoBehaviour:
   gravityScaleFactor: 1.5
   jumpSound: {fileID: 8300000, guid: 898ec5094a58bc140a54f6b671a3d24d, type: 3}
   strawDialoguePickup: {fileID: 11400000, guid: 91345fafc4c3339499419e8cd8e835e3, type: 2}
-  strawDialogueUse: {fileID: 0}
+  strawDialogueUse: {fileID: 11400000, guid: ca11abd41cf3cf74aa404b66b73f3f04, type: 2}
+  lastfinish: {fileID: 232777396}
+  strawSound: {fileID: 8300000, guid: 93ebe4a26a6d5494f8e42e39ab29f120, type: 3}
 --- !u!95 &1487734474
 Animator:
   serializedVersion: 5

@@ -72,10 +72,10 @@ public class LevelController : MonoBehaviour
         UpdateLevelTimer();
 
         // tmp killbind
-        if (Input.GetKeyDown(KeyCode.K))
-        {
-            OnTrueDeath();
-        }
+        // if (Input.GetKeyDown(KeyCode.K))
+        // {
+        //     OnTrueDeath();
+        // }
     }
 
     void UpdateLevelTimer()

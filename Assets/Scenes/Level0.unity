@@ -407,6 +407,7 @@ MonoBehaviour:
   objectsToDeactivate:
   - {fileID: 1698055718}
   onlyOne: 1
+  shouldPlaySound: 1
 --- !u!1 &78225029
 GameObject:
   m_ObjectHideFlags: 0
@@ -5903,6 +5904,7 @@ MonoBehaviour:
   objectsToDeactivate:
   - {fileID: 1194107661}
   onlyOne: 1
+  shouldPlaySound: 1
 --- !u!1 &308315057
 GameObject:
   m_ObjectHideFlags: 0
@@ -6080,7 +6082,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   levelStartDialogue: {fileID: 11400000, guid: 12ac513331337824f9a3b150d5f00650, type: 2}
-  blockMoveTime: 0.45
+  blockMoveTime: 45
   nextSceneDialogue: {fileID: 11400000, guid: fc0b7a1bf2f551d4b9e99a773614efbf, type: 2}
   nextSceneName: Level1
   finalPanel: {fileID: 156094614}
@@ -10112,6 +10114,10 @@ MonoBehaviour:
   objectGravityScale: 8
   gravityScaleFactor: 1.5
   jumpSound: {fileID: 8300000, guid: 898ec5094a58bc140a54f6b671a3d24d, type: 3}
+  strawDialoguePickup: {fileID: 0}
+  strawDialogueUse: {fileID: 0}
+  lastfinish: {fileID: 0}
+  strawSound: {fileID: 0}
 --- !u!95 &1487734474
 Animator:
   serializedVersion: 5
@@ -12417,6 +12423,7 @@ MonoBehaviour:
   objectsToActivate: []
   objectsToDeactivate: []
   onlyOne: 0
+  shouldPlaySound: 1
 --- !u!1 &2089207944
 GameObject:
   m_ObjectHideFlags: 0

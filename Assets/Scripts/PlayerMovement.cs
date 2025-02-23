@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
@@ -33,7 +34,12 @@ public class PlayerMovement : MonoBehaviour
     bool holdStraw = false;
     [SerializeField] GameDialogue strawDialoguePickup;
     [SerializeField] GameDialogue strawDialogueUse;
+    [SerializeField] GameObject lastfinish;
+    bool startDrinking = false;
+    [SerializeField] AudioClip strawSound;
+    LavaController lavaController;
     DialogueController dialogueController;
+    int drinkCounter = 10;
 
     void Awake()
     {
@@ -44,7 +50,8 @@ public class PlayerMovement : MonoBehaviour
         dialogueController = FindObjectOfType<DialogueController>();
     }
 
-    public float GetYVelocity() {
+    public float GetYVelocity()
+    {
         return rb.velocity.y;
     }
 
@@ -53,7 +60,8 @@ public class PlayerMovement : MonoBehaviour
         transform.position = position;
     }
 
-    public void AllowPlayerMove() {
+    public void AllowPlayerMove()
+    {
         canMove = true;
         gameObject.SetActive(true);
     }
@@ -83,10 +91,32 @@ public class PlayerMovement : MonoBehaviour
             return;
         }
 
-        if (!holdStraw && nearStraw && Input.GetKeyDown(KeyCode.E)) {
-            holdStraw = true;
-            straw.transform.SetParent(transform);
-            straw.transform.localPosition = Vector2.right * 0.3f;
+        if (Input.GetKeyDown(KeyCode.E)) {
+            if (!holdStraw && nearStraw) {
+                holdStraw = true;
+                straw.transform.SetParent(transform);
+                straw.transform.localPosition = Vector2.right * 0.3f;
+            } else if (holdStraw) {
+                // sound of drinking
+                SoundFXManager.Instance.PlaySoundFXClip(strawSound, transform);
+                if (lavaController.PlayerNearLava(transform.position)) {
+                    if (!startDrinking) {
+                        startDrinking = true;
+                        lastfinish.SetActive(false);
+                        dialogueController.EnqueueParagraph(strawDialogueUse);
+                    }
+                    transform.localScale *= 1.1f;
+                    straw.transform.localScale /= 1.1f;
+                    drinkCounter -= 1;
+
+                    if (drinkCounter == 0) {
+                        holdStraw = false;
+                        Debug.Log("call OnTrueDeath");
+                        FindObjectOfType<LevelController>().OnTrueDeath();
+                        return;
+                    }
+                }
+            }
         }
 
         Move();
@@ -201,18 +231,21 @@ public class PlayerMovement : MonoBehaviour
     void OnTriggerEnter2D(Collider2D collider)
     {
         // Debug.Log(collider.gameObject.tag);
-        if (!holdStraw && collider.gameObject.CompareTag("Straw")) {
+        if (!holdStraw && collider.gameObject.CompareTag("Straw"))
+        {
             nearStraw = true;
             straw = collider.gameObject;
             // todo replic
             dialogueController.EnqueueParagraph(strawDialoguePickup);
+            lavaController = FindObjectOfType<LavaController>();
         }
     }
 
     void OnTriggerExit2D(Collider2D collider)
     {
         // Debug.Log(collision.gameObject.tag);
-        if (!holdStraw && collider.gameObject.CompareTag("Straw")) {
+        if (!holdStraw && collider.gameObject.CompareTag("Straw"))
+        {
             nearStraw = false;
         }
     }
